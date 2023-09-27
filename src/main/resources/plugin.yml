@@ -1,0 +1,4 @@
+name: DeepAndDeeper
+version: '${version}'
+main: com.deepanddeeper.deepanddeeper.DeepAndDeeper
+api-version: 1.20
