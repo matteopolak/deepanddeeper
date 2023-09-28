@@ -1,24 +1,34 @@
 package com.deepanddeeper.deepanddeeper;
 
-import com.deepanddeeper.deepanddeeper.events.BlockBreakListener;
+import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public final class DeepAndDeeper extends JavaPlugin {
 	private FileConfiguration config = this.getConfig();
 	private Database database;
 
+	public World lobby = this.getServer().getWorld("world");
+
 	@Override
 	public void onEnable() {
-		this.getServer().getPluginManager().registerEvents(new BlockBreakListener(), this);
+		Listener[] listeners = {
+			new PlayerJoinListener(this.lobby),
+		};
+
+		PluginManager manager = this.getServer().getPluginManager();
+
+		for (Listener listener : listeners) {
+			manager.registerEvents(listener, this);
+		}
 
 		this.config.addDefault("database-uri", "jdbc:postgresql://localhost/deepanddeeper");
-		this.saveConfig();
+		this.saveDefaultConfig();
 
-		try {
+		/*try {
 			this.database = new Database(this.config.getString("database-uri"));
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -38,7 +48,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			""");
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}
+		}*/
 	}
 
 	@Override
