@@ -1,16 +1,14 @@
 package com.deepanddeeper.deepanddeeper;
 
+
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginManager;
+import com.deepanddeeper.deepanddeeper.itemmanager.ItemManager;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DeepAndDeeper extends JavaPlugin {
@@ -19,6 +17,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 	private void registerListeners() {
 		// Add event listeners here
+
 		Listener[] listeners = {
 			new PlayerJoinListener(),
 			new EntityClickListener(),
@@ -71,6 +70,9 @@ public final class DeepAndDeeper extends JavaPlugin {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}*/
+		ItemManager im = new ItemManager();
+		getCommand("givesword").setExecutor(im);
+
 	}
 
 	@Override
