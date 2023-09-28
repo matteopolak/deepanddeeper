@@ -26,7 +26,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		}
 
 		this.config.addDefault("database-uri", "jdbc:postgresql://localhost/deepanddeeper");
-		this.saveDefaultConfig();
+		this.saveConfig();
 
 		/*try {
 			this.database = new Database(this.config.getString("database-uri"));
