@@ -7,7 +7,6 @@ import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
-import com.deepanddeeper.deepanddeeper.itemmanager.ItemManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -70,8 +69,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}*/
-		ItemManager im = new ItemManager();
-		getCommand("givesword").setExecutor(im);
+
 
 	}
 
