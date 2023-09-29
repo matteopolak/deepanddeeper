@@ -1,0 +1,19 @@
+database-uri: "jdbc:postgresql://localhost/deepanddeeper"
+weapons:
+  - id: "cool_sword"
+    name: "&7Basic &fSword"
+    lore:
+      - "The most basic of swords."
+      - "Some more &btext&r."
+    damage: 50.0
+    # cooldown in seconds
+    cooldown: 2.5
+  - id: "epic_sword"
+    name: "&eEpic &fSword"
+    lore:
+      - "A slightly better sword."
+    damage: 70.0
+    cooldown: 2.4
+enemies:
+  - id: "skeleton"
+    name: "Skeleton"
