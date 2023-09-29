@@ -1,4 +1,4 @@
-package items;
+package com.deepanddeeper.deepanddeeper.items;
 
 import org.bukkit.Material;
 

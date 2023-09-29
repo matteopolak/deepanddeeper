@@ -1,4 +1,4 @@
-package items;
+package com.deepanddeeper.deepanddeeper.items;
 
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
@@ -6,7 +6,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
