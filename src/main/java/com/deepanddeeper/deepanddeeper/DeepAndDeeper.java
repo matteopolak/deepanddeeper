@@ -2,32 +2,27 @@ package com.deepanddeeper.deepanddeeper;
 
 
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
-import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
+import com.deepanddeeper.deepanddeeper.commands.StartGameCommand;
+import com.deepanddeeper.deepanddeeper.events.EntityInventoryListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
 import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import com.deepanddeeper.deepanddeeper.weapons.WeaponHolder;
-import com.google.common.base.Enums;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.entity.EntityType;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
 public final class DeepAndDeeper extends JavaPlugin {
 	private FileConfiguration config = this.getConfig();
-	private Database database;
+	public Database database;
 
 	public WeaponHolder weaponHolder;
 
@@ -36,7 +31,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		Listener[] listeners = {
 			new PlayerJoinListener(this),
-			new EntityClickListener(),
+			new EntityInventoryListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -50,6 +45,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		// Add commands here
 		CommandWithName[] commands = {
 			new GetWorldCommand(),
+			new StartGameCommand(this),
 		};
 
 		for (CommandWithName command : commands) {
@@ -61,6 +57,12 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public void onEnable() {
 		Bukkit.getLogger().log(Level.INFO, "Hello, world!");
 
+		try {
+			Class.forName("org.postgresql.Driver");
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException(e);
+		}
+
 		this.saveDefaultConfig();
 
 		this.weaponHolder = new WeaponHolder(((List<Object>) this.getConfig().getList("weapons")).stream()
@@ -70,29 +72,41 @@ public final class DeepAndDeeper extends JavaPlugin {
 		this.registerCommands();
 		this.registerListeners();
 
-		/*try {
+		try {
 			this.database = new Database(this.config.getString("database-uri"));
-		} catch (SQLException e) {
+		} catch (SQLException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 
 		try (Statement st = this.database.getConnection().createStatement()) {
 			st.execute("""
 				CREATE TABLE IF NOT EXISTS "user" (
-					"uuid" UUID PRIMARY KEY,
+					"uuid" UUID PRIMARY KEY
 				);
-				
+
 				CREATE TABLE IF NOT EXISTS "profile" (
 					"id" SERIAL PRIMARY KEY,
-					"user" UUID NOT NULL REFERENCES ("user"."uuid"),
-					"coins" INT DEFAULT 0
+					"user" UUID NOT NULL,
+					"active" BOOLEAN NOT NULL,
+					"coins" INT DEFAULT 0,
+					"wins" INT DEFAULT 0,
+					"losses" INT DEFAULT 0,
+					"kills" INT DEFAULT 0,
+					"deaths" INT DEFAULT 0,
+					"xp" INT DEFAULT 0
+				);
+
+				CREATE TABLE IF NOT EXISTS "stash" (
+					"profile_id" INT NOT NULL,
+					"slot" INT NOT NULL,
+					"item_id" TEXT NOT NULL,
+					
+					PRIMARY KEY ("profile_id", "slot")
 				);
 			""");
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}*/
-
-
+		}
 	}
 
 	@Override

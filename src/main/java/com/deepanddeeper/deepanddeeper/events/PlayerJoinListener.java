@@ -14,6 +14,11 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class PlayerJoinListener implements Listener {
 	private DeepAndDeeper plugin;
 	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
@@ -32,7 +37,7 @@ public class PlayerJoinListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerJoin(PlayerJoinEvent event) {
+	public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
 		Player player = event.getPlayer();
 
 		// Teleport the player to the lobby
@@ -50,5 +55,37 @@ public class PlayerJoinListener implements Listener {
 		}
 
 		this.playingTeam.addPlayer(player);
+
+		Connection connection = this.plugin.database.getConnection();
+
+		try (
+			PreparedStatement insertUser = connection.prepareStatement("""
+				INSERT INTO "user" ("uuid") VALUES (?);
+			""");
+			PreparedStatement insertProfile = connection.prepareStatement("""
+				INSERT INTO "profile" ("user", "active") VALUES (?, TRUE);
+			""");
+		) {
+			connection.setAutoCommit(false);
+
+			insertUser.setObject(1, player.getUniqueId());
+			insertUser.execute();
+
+			insertProfile.setObject(1, player.getUniqueId());
+			insertProfile.execute();
+
+			connection.commit();
+
+			this.plugin.getLogger().info("Created user and profile for " + player.getName());
+		} catch (SQLException e) {
+			e.printStackTrace();
+
+			// If the user already exists, ignore the error
+			if (e.getErrorCode() != 0) {
+				throw e;
+			}
+		} finally {
+			connection.setAutoCommit(true);
+		}
 	}
 }
