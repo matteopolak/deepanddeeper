@@ -3,16 +3,20 @@ package com.deepanddeeper.deepanddeeper;
 
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
+import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
+import com.deepanddeeper.deepanddeeper.party.PartyManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
-
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class DeepAndDeeper extends JavaPlugin {
 	private FileConfiguration config = this.getConfig();
 	private Database database;
+
+	public PartyManager partyManager = new PartyManager();
+
 
 	private void registerListeners() {
 		// Add event listeners here
@@ -20,6 +24,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		Listener[] listeners = {
 			new PlayerJoinListener(),
 			new EntityClickListener(),
+				new PartyEventListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -47,6 +52,8 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		this.config.addDefault("database-uri", "jdbc:postgresql://localhost/deepanddeeper");
 		this.saveConfig();
+
+
 
 		/*try {
 			this.database = new Database(this.config.getString("database-uri"));
