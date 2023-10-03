@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class Database {
 	private Connection connection;
 
-	Database(String uri) throws SQLException {
+	Database(String uri) throws SQLException, ClassNotFoundException {
 		this.connection = DriverManager.getConnection(uri);
 	}
 
