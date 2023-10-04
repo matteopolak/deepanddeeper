@@ -91,6 +91,10 @@ public class Party {
         this.invites.add(player);
     }
 
+    public boolean hasInvite(Player player) {
+        return this.invites.contains(player);
+    }
+
     public boolean isFull() {
         return this.members.size() == MAX_PARTY_SIZE;
     }

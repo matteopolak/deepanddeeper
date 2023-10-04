@@ -11,7 +11,7 @@ public class PartyManager {
     private HashMap<UUID, Party> parties = new HashMap<>();
 
     public @NotNull Party create(Player leader) {
-        Party currentParty = this.getParty(leader);
+        Party currentParty = this.parties.get(leader.getUniqueId());
 
         if (currentParty != null) {
             if (!currentParty.remove(leader)) {
@@ -39,6 +39,6 @@ public class PartyManager {
     }
 
     public @NotNull Party getParty(Player p) {
-        return parties.get(p.getUniqueId());
+        return this.parties.get(p.getUniqueId());
     }
 }
