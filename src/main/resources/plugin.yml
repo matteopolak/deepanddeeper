@@ -13,3 +13,6 @@ commands:
   startgame:
     description: Starts the game.
     usage: /startgame
+  invite:
+    description: Invites a player to your party.
+    usage: /invite <player>

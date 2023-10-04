@@ -2,6 +2,7 @@ package com.deepanddeeper.deepanddeeper;
 
 
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
+import com.deepanddeeper.deepanddeeper.commands.party.PartyInviteCommand;
 import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
@@ -55,6 +56,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		CommandWithName[] commands = {
 			new GetWorldCommand(),
 			new StartGameCommand(this),
+			new PartyInviteCommand(),
 		};
 
 		for (CommandWithName command : commands) {
