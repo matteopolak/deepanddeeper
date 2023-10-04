@@ -24,7 +24,7 @@ public class PartyInviteCommand implements CommandWithName {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if(sender instanceof Player player) {
-
+            //Make it so you cant invite while in a game
             Party party = this.plugin.partyManager.getParty(player);
 
             if(party.getLeader() != player) {
@@ -43,6 +43,7 @@ public class PartyInviteCommand implements CommandWithName {
                 if(playerToInvite != null) {
                     playerToInvite.sendMessage(String.format("§b§l> §7You are being invited by §f%s§7, type §f/accept§7 to join their party!", player.getName()));
                     party.sendMessage(String.format("§b§l> §f%s §7has been invited to your party!", playerToInvite.getName()));
+                    party.invite(playerToInvite);
                 } else {
                     player.sendMessage(String.format("§b§l> §f%s §7could not be found.", s));
                 }
