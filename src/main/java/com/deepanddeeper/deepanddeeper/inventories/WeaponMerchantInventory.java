@@ -1,14 +1,10 @@
 package com.deepanddeeper.deepanddeeper.inventories;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.events.EntityInventoryListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.sql.Connection;
@@ -29,7 +25,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("1e0067eb-07d2-4afe-8191-7f718bd12c21");
+		return UUID.fromString("2e0067eb-07d2-4afe-8191-7f718bd12c21");
 	}
 
 	@Override

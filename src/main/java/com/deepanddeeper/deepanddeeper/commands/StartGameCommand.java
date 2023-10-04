@@ -25,17 +25,15 @@ import java.io.File;
 import java.io.IOException;
 
 public class StartGameCommand implements CommandWithName {
-	private static int totalGames = 0;
+
 
 	private DeepAndDeeper plugin;
-	private Map[] maps;
+
 
 	public StartGameCommand(DeepAndDeeper plugin) {
 		this.plugin = plugin;
 
-		this.maps = plugin.getConfig().getList("maps").stream()
-			.map(map -> Map.deserialize((java.util.Map<String, Object>) map))
-			.toArray(Map[]::new);
+
 	}
 
 	public String commandName() {
@@ -45,16 +43,7 @@ public class StartGameCommand implements CommandWithName {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (sender instanceof Player player) {
-			// create world with name "game-<totalGames>"
-			// and make the world completely empty
-			String worldName = "game-" + totalGames++;
 
-			Map map = this.maps[0];
-
-			World world = map.generate(worldName);
-
-			player.teleport(map.spawns().get(0).location(world));
-			player.sendMessage(Component.text("You are currently in " + worldName));
 		}
 
 		return true;

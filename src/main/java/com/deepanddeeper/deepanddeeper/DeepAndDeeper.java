@@ -4,10 +4,11 @@ package com.deepanddeeper.deepanddeeper;
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
+import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
 
 import com.deepanddeeper.deepanddeeper.commands.StartGameCommand;
-import com.deepanddeeper.deepanddeeper.events.EntityInventoryListener;
+import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
 
 import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import com.deepanddeeper.deepanddeeper.weapons.WeaponHolder;
@@ -17,6 +18,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,17 +32,15 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public WeaponHolder weaponHolder;
 
 	public PartyManager partyManager = new PartyManager();
-
+	public GameManager gameManager = new GameManager(this);
 
 	private void registerListeners() {
 		// Add event listeners here
 
 		Listener[] listeners = {
-
-				new PartyEventListener(this),
-
+			new PartyEventListener(this),
 			new PlayerJoinListener(this),
-			new EntityInventoryListener(this),
+			new EntityClickListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -83,12 +85,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		this.config.addDefault("database-uri", "jdbc:postgresql://localhost/deepanddeeper");
 		this.saveConfig();
 
-
-	}
-		/*try {
-=======
 		try {
->>>>>>> a049348c53e3f42a753c0d915c17425f28175d3b
 			this.database = new Database(this.config.getString("database-uri"));
 		} catch (SQLException | ClassNotFoundException e) {
 			throw new RuntimeException(e);
@@ -124,7 +121,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			throw new RuntimeException(e);
 		}
 	}
-*/
+
 	@Override
 	public void onDisable() {
 		// Plugin shutdown logic

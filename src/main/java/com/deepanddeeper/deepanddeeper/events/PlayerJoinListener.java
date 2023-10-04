@@ -47,14 +47,9 @@ public class PlayerJoinListener implements Listener {
 		boolean wasInGame = this.playingTeam.removePlayer(player);
 
 		if (wasInGame) {
-			// send message to player using colour codes, e.g. "&cYou left the game &cuh no!"
-			player.sendMessage(Component.text("You left the game", NamedTextColor.RED));
-
 			// now using colour escape codes
-			player.sendMessage("§cYou left the game §6uh no!");
+			player.sendMessage("§c§l> §7You quit while in a game and were put back in the lobby.");
 		}
-
-		this.playingTeam.addPlayer(player);
 
 		Connection connection = this.plugin.database.getConnection();
 
@@ -66,6 +61,8 @@ public class PlayerJoinListener implements Listener {
 				INSERT INTO "profile" ("user", "active") VALUES (?, TRUE);
 			""");
 		) {
+			player.sendMessage("§b§l> §7Checking if you have a profile...");
+
 			connection.setAutoCommit(false);
 
 			insertUser.setObject(1, player.getUniqueId());
@@ -75,14 +72,15 @@ public class PlayerJoinListener implements Listener {
 			insertProfile.execute();
 
 			connection.commit();
+			player.sendMessage("§a§l> §7Your profile has been created!");
 
 			this.plugin.getLogger().info("Created user and profile for " + player.getName());
 		} catch (SQLException e) {
-			e.printStackTrace();
+			player.sendMessage("§b§l> §7You already have a profile, welcome back!");
 
 			// If the user already exists, ignore the error
 			if (e.getErrorCode() != 0) {
-				throw e;
+				e.printStackTrace();
 			}
 		} finally {
 			connection.setAutoCommit(true);

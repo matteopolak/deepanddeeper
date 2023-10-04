@@ -101,6 +101,7 @@ public class Map {
 		world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
 		world.setGameRule(GameRule.MOB_GRIEFING, false);
 		world.setGameRule(GameRule.DO_TILE_DROPS, false);
+		world.setGameRule(GameRule.FALL_DAMAGE, false);
 
 		try {
 			ClipboardReader reader = this.clipboard.getReader(new FileInputStream(this.file));
@@ -112,7 +113,8 @@ public class Map {
 			Operation operation = new ClipboardHolder(reader.read())
 				.createPaste(session)
 				.to(BlockVector3.at(0, 0, 0))
-				.ignoreAirBlocks(true)
+				// Needed to overwrite previous maps
+				.ignoreAirBlocks(false)
 				.build();
 
 			Operations.complete(operation);
