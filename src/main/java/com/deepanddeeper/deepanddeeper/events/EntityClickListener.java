@@ -45,10 +45,14 @@ public class EntityClickListener implements Listener {
 
 		UUID entityId = event.getRightClicked().getUniqueId();
 
+		event.getPlayer().sendMessage(entityId.toString());
+
 		Action action = this.actions.get(entityId);
 
 		if (action != null) {
+			event.setCancelled(true);
 			action.perform(event);
+
 			return;
 		}
 
@@ -58,6 +62,7 @@ public class EntityClickListener implements Listener {
 			return;
 		}
 
+		event.setCancelled(true);
 		event.getPlayer().openInventory(inventory.getInventory());
 	}
 

@@ -3,9 +3,11 @@ package com.deepanddeeper.deepanddeeper;
 
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyInviteCommand;
+import com.deepanddeeper.deepanddeeper.events.GameEventListener;
 import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
+import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
 
 import com.deepanddeeper.deepanddeeper.commands.StartGameCommand;
@@ -15,6 +17,7 @@ import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import com.deepanddeeper.deepanddeeper.weapons.WeaponHolder;
 import org.bukkit.Bukkit;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
@@ -34,6 +37,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
+	public StatisticsManager statisticsManager = new StatisticsManager(this);
 
 	private void registerListeners() {
 		// Add event listeners here
@@ -42,6 +46,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new PartyEventListener(this),
 			new PlayerJoinListener(this),
 			new EntityClickListener(this),
+			new GameEventListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -66,7 +71,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		Bukkit.getLogger().log(Level.INFO, "Hello, world!");
+		Bukkit.getWorld("world").setSpawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
 
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -82,7 +87,6 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		this.registerCommands();
 		this.registerListeners();
-
 
 		this.config.addDefault("database-uri", "jdbc:postgresql://localhost/deepanddeeper");
 		this.saveConfig();

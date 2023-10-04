@@ -8,11 +8,11 @@ import java.util.Iterator;
 
 public class Party {
 
-    private static final int MAX_PARTY_SIZE = 3;
+    public static final int MAX_PARTY_SIZE = 3;
 
     private Player leader;
 
-    private HashSet<Player> members = new HashSet<>();
+    public HashSet<Player> members = new HashSet<>();
 
     public Party(Player leader) {
         this.leader = leader;
