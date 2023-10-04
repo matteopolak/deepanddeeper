@@ -10,9 +10,12 @@ commands:
   world:
     description: Prints out the current world of the player executing the command.
     usage: /world
-  startgame:
-    description: Starts the game.
-    usage: /startgame
   invite:
     description: Invites a player to your party.
     usage: /invite <player>
+  accept:
+    description: Accepts a party invite.
+    usage: /accept <player>
+  kick:
+    description: Kicks a player from your party.
+    usage: /kick <player>

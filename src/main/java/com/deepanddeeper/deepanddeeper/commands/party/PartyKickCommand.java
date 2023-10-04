@@ -40,5 +40,7 @@ public class PartyKickCommand implements CommandWithName {
             }
 
         }
+
+        return true;
     }
 }

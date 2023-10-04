@@ -4,6 +4,7 @@ package com.deepanddeeper.deepanddeeper;
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyAcceptCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyInviteCommand;
+import com.deepanddeeper.deepanddeeper.commands.party.PartyKickCommand;
 import com.deepanddeeper.deepanddeeper.events.GameEventListener;
 import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
@@ -11,7 +12,6 @@ import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
 
-import com.deepanddeeper.deepanddeeper.commands.StartGameCommand;
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
 
 import com.deepanddeeper.deepanddeeper.weapons.Weapon;
@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 public final class DeepAndDeeper extends JavaPlugin {
 	private FileConfiguration config = this.getConfig();
@@ -61,9 +60,9 @@ public final class DeepAndDeeper extends JavaPlugin {
 		// Add commands here
 		CommandWithName[] commands = {
 			new GetWorldCommand(),
-			new StartGameCommand(this),
 			new PartyInviteCommand(this),
 			new PartyAcceptCommand(this),
+			new PartyKickCommand(this),
 		};
 
 		for (CommandWithName command : commands) {

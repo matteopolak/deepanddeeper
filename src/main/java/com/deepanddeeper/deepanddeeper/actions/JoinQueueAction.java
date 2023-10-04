@@ -28,9 +28,7 @@ public class JoinQueueAction implements Action {
 		Player player = event.getPlayer();
 		Party party = this.plugin.partyManager.getParty(player);
 
-		if (party == null) {
-			party = this.plugin.partyManager.create(player);
-		}
+		player.sendMessage("leader: " + party.getLeader().getName() + " you: " + player.getName(), " equal? " + (party.getLeader() == player));
 
 		if (party.getLeader() != player) {
 			player.sendMessage("§c§l> §7Only the party leader can join the queue!");
