@@ -56,7 +56,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		CommandWithName[] commands = {
 			new GetWorldCommand(),
 			new StartGameCommand(this),
-			new PartyInviteCommand(),
+			new PartyInviteCommand(this),
 		};
 
 		for (CommandWithName command : commands) {

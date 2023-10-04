@@ -82,4 +82,8 @@ public class Party {
             member.sendActionBar(message);
         }
     }
+
+    public boolean isFull() {
+        return this.members.size() == MAX_PARTY_SIZE;
+    }
 }
