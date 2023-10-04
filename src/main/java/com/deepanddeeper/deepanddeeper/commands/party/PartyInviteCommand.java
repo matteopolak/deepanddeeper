@@ -1,6 +1,8 @@
 package com.deepanddeeper.deepanddeeper.commands.party;
 
 import com.deepanddeeper.deepanddeeper.CommandWithName;
+import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.party.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -8,6 +10,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PartyInviteCommand implements CommandWithName {
+    private DeepAndDeeper plugin;
+
+    public PartyInviteCommand(DeepAndDeeper plugin) {
+        this.plugin = plugin;
+    }
+
     public String commandName() {
         return "invite";
     }
@@ -16,17 +24,28 @@ public class PartyInviteCommand implements CommandWithName {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
         if(sender instanceof Player player) {
+            //Make it so you cant invite while in a game
+            Party party = this.plugin.partyManager.getParty(player);
 
-            //Make sure that a player cannot be invited when the party is full
-            //Make sure you are the party leader
+            if(party.getLeader() != player) {
+                player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
+                return false;
+            }
+
+            if(party.isFull()) {
+                player.sendMessage("§c§l> §7Your party is full.");
+                return false;
+            }
+
             for(String s : args) {
                 Player playerToInvite = Bukkit.getPlayerExact(s);
 
                 if(playerToInvite != null) {
-                    playerToInvite.sendMessage(String.format("§b§l> §7 You are being invited by %s, type /accept to join their party!", player.getName()));
-                    //add message to party when the player gets invited
+                    playerToInvite.sendMessage(String.format("§b§l> §7You are being invited by §f%s§7, type §f/accept§7 to join their party!", player.getName()));
+                    party.sendMessage(String.format("§b§l> §f%s §7has been invited to your party!", playerToInvite.getName()));
+                    party.invite(playerToInvite);
                 } else {
-                    player.sendMessage("§b§l> §7 This player does not exist.");
+                    player.sendMessage(String.format("§b§l> §f%s §7could not be found.", s));
                 }
 
             }

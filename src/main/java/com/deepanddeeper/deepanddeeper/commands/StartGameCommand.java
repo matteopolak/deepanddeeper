@@ -32,8 +32,6 @@ public class StartGameCommand implements CommandWithName {
 
 	public StartGameCommand(DeepAndDeeper plugin) {
 		this.plugin = plugin;
-
-
 	}
 
 	public String commandName() {

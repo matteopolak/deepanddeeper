@@ -14,6 +14,8 @@ public class Party {
 
     public HashSet<Player> members = new HashSet<>();
 
+    private HashSet<Player> invites = new HashSet<>();
+
     public Party(Player leader) {
         this.leader = leader;
         this.add(leader);
@@ -32,6 +34,8 @@ public class Party {
         }
 
         this.members.add(p);
+        this.invites.remove(p);
+
 
         return true;
     }
@@ -81,5 +85,13 @@ public class Party {
         for (Player member : this.members) {
             member.sendActionBar(message);
         }
+    }
+
+    public void invite(Player player) {
+        this.invites.add(player);
+    }
+
+    public boolean isFull() {
+        return this.members.size() == MAX_PARTY_SIZE;
     }
 }

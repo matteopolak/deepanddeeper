@@ -38,7 +38,7 @@ public class PartyManager {
         if(partyToLeave.remove(p)) parties.remove(p.getUniqueId());
     }
 
-    public @Nullable Party getParty(Player p) {
+    public @NotNull Party getParty(Player p) {
         return parties.get(p.getUniqueId());
     }
 }
