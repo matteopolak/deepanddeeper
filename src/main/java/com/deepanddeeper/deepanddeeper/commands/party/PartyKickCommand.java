@@ -2,6 +2,7 @@ package com.deepanddeeper.deepanddeeper.commands.party;
 
 import com.deepanddeeper.deepanddeeper.CommandWithName;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.game.Game;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -24,10 +25,18 @@ public class PartyKickCommand implements CommandWithName {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if(sender instanceof Player player) {
-            //Make it so you cant kick mid-game
+
+
             Party party = this.plugin.partyManager.getParty(player);
             if(party.getLeader() != player) {
                 player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
+                return false;
+            }
+
+            Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+
+            if(game != null && !game.hasEnded()) {
+                player.sendMessage("§c§l> §7You cannot kick a player during a game!");
                 return false;
             }
 
@@ -40,5 +49,6 @@ public class PartyKickCommand implements CommandWithName {
             }
 
         }
+        return false;
     }
 }
