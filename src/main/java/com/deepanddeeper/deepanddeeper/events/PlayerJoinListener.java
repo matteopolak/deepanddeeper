@@ -21,19 +21,9 @@ import java.sql.SQLException;
 
 public class PlayerJoinListener implements Listener {
 	private DeepAndDeeper plugin;
-	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-	private Team playingTeam;
 
 	public PlayerJoinListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;
-
-		try {
-			this.playingTeam = this.scoreboard.registerNewTeam("playing");
-			this.playingTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-		} catch (IllegalArgumentException e) {
-			// The team already exists
-			this.playingTeam = this.scoreboard.getTeam("playing");
-		}
 	}
 
 	@EventHandler
@@ -44,7 +34,7 @@ public class PlayerJoinListener implements Listener {
 		player.teleport(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
 
 		// Remove the player from the "playing" team when they join
-		boolean wasInGame = this.playingTeam.removePlayer(player);
+		boolean wasInGame = this.plugin.playingTeam.removePlayer(player);
 
 		if (wasInGame) {
 			// now using colour escape codes

@@ -54,7 +54,7 @@ public class PartyAcceptCommand implements CommandWithName {
             Party partyToJoin = this.plugin.partyManager.getParty(partyLeader);
 
             if(partyToJoin.hasInvite(player)) {
-                partyToJoin.add(player);
+                this.plugin.partyManager.join(player, partyToJoin);
                 return true;
             } else {
                 player.sendMessage("§c§l> §7You have not been invited to this party.");

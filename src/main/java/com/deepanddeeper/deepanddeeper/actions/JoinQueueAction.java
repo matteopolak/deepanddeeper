@@ -1,6 +1,7 @@
 package com.deepanddeeper.deepanddeeper.actions;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.game.Game;
 import com.deepanddeeper.deepanddeeper.game.Queue;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
@@ -35,10 +36,21 @@ public class JoinQueueAction implements Action {
 			return;
 		}
 
+		if (this.plugin.gameManager.isInGame(player)) {
+			player.sendMessage("§c§l> §7You cannot join the queue while in a game!");
+			return;
+		}
+
 		if (!this.plugin.gameManager.queue.add(party)) {
 			this.plugin.gameManager.queue.remove(party);
 
 			player.sendMessage("§a§l> §7You have left the queue!");
+
+			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
+				"§fWaiting for parties... (§b%d§f/%d)",
+				this.plugin.gameManager.queue.size(),
+				this.plugin.gameManager.queue.maxSize()
+			)));
 		} else {
 			player.sendMessage("§a§l> §7You have joined the queue!");
 

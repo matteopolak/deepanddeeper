@@ -8,6 +8,7 @@ import com.deepanddeeper.deepanddeeper.commands.party.PartyKickCommand;
 import com.deepanddeeper.deepanddeeper.events.GameEventListener;
 import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
+import com.deepanddeeper.deepanddeeper.game.Game;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
@@ -20,9 +21,12 @@ import org.bukkit.Bukkit;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,6 +42,9 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
+
+	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+	public Team playingTeam;
 
 	private void registerListeners() {
 		// Add event listeners here
@@ -73,6 +80,14 @@ public final class DeepAndDeeper extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		Bukkit.getWorld("world").setSpawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
+
+		try {
+			this.playingTeam = this.scoreboard.registerNewTeam("playing");
+			this.playingTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
+		} catch (IllegalArgumentException e) {
+			// The team already exists
+			this.playingTeam = this.scoreboard.getTeam("playing");
+		}
 
 		try {
 			Class.forName("org.postgresql.Driver");

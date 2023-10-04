@@ -90,6 +90,7 @@ public class Game extends BukkitRunnable {
 				for (Player player : this.parties.get(i).getMembers()) {
 					player.setGameMode(GameMode.ADVENTURE);
 					player.teleport(spawn);
+					this.plugin.playingTeam.addPlayer(player);
 				}
 			}
 		} else {
@@ -128,6 +129,7 @@ public class Game extends BukkitRunnable {
 
 		for (Player p : winningParty.getMembers()) {
 			this.plugin.statisticsManager.addWin(p);
+			this.plugin.playingTeam.removePlayer(player);
 		}
 
 		winningParty.sendMessage("§b§l> §7Your party has won the game!");
@@ -137,6 +139,7 @@ public class Game extends BukkitRunnable {
 
 			for (Player p : party.getMembers()) {
 				this.plugin.statisticsManager.addLoss(p);
+				this.plugin.playingTeam.removePlayer(player);
 			}
 
 			party.sendMessage("§b§l> §7Your party has lost the game.");

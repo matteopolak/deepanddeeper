@@ -21,12 +21,10 @@ public class GameEventListener implements Listener {
 	// on player death
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) throws SQLException {
-		Bukkit.broadcastMessage("lmao " + event.getPlayer().getName() + " died");
-
 		Player player = event.getPlayer();
 		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-		if (game == null) {
+		if (game == null || game.hasEnded()) {
 			return;
 		}
 
@@ -36,7 +34,6 @@ public class GameEventListener implements Listener {
 		player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 
 		Player killer = player.getKiller();
-		Bukkit.broadcastMessage("they were killed by " + (killer == null ? "no one?" : killer.getName()));
 
 		if (killer != null) {
 			this.plugin.statisticsManager.addKill(killer);

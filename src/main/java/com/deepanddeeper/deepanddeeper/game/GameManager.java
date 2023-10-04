@@ -30,6 +30,12 @@ public class GameManager {
 			.toArray(Map[]::new);
 	}
 
+	public boolean isInGame(Player player) {
+		Game game = this.games.get(player.getUniqueId());
+
+		return game != null && !game.hasEnded();
+	}
+
 	public Game startGame(List<Party> parties) {
 		int nextId = GameManager.freeGameIds.isEmpty() ? GameManager.totalGames++ : GameManager.freeGameIds.remove(0);
 

@@ -43,7 +43,7 @@ public class PartyKickCommand implements CommandWithName {
             Player playerToKick = Bukkit.getPlayerExact(args[0]);
 
             if(party.members.contains(playerToKick)) {
-                party.remove(playerToKick);
+                this.plugin.partyManager.leave(playerToKick);
             } else {
                 player.sendMessage("§b§l> §fPlayer could not be found.");
             }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Queue {
-	public static final int PARTIES_PER_GAME = 1;
+	public static final int PARTIES_PER_GAME = 3;
 
 	private DeepAndDeeper plugin;
 	private List<Party> queue = new ArrayList<>();

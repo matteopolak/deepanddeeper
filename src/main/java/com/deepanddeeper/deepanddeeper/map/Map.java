@@ -102,6 +102,7 @@ public class Map {
 		world.setGameRule(GameRule.MOB_GRIEFING, false);
 		world.setGameRule(GameRule.DO_TILE_DROPS, false);
 		world.setGameRule(GameRule.FALL_DAMAGE, false);
+		world.setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
 
 		try {
 			ClipboardReader reader = this.clipboard.getReader(new FileInputStream(this.file));
