@@ -1,22 +1,20 @@
 package com.deepanddeeper.deepanddeeper.events;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.Criteria;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerJoinListener implements Listener {
@@ -75,5 +73,17 @@ public class PlayerJoinListener implements Listener {
 		} finally {
 			connection.setAutoCommit(true);
 		}
+
+		int coins = this.plugin.statisticsManager.getCoins(player);
+
+		Scoreboard scoreboard = player.getScoreboard();
+		Objective objective = scoreboard.getObjective("coins");
+
+		if (objective == null) {
+			objective = scoreboard.registerNewObjective("coins", Criteria.DUMMY, Component.text("Coins"));
+		}
+
+		// display coins on scoreboard only to the player, like FeatherBoard
+		objective.getScore(player.getName()).setScore(coins);
 	}
 }

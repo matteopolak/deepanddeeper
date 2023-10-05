@@ -1,7 +1,6 @@
 package com.deepanddeeper.deepanddeeper.map;
 
 import com.deepanddeeper.deepanddeeper.generators.VoidGenerator;
-import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import com.fastasyncworldedit.core.FaweAPI;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;

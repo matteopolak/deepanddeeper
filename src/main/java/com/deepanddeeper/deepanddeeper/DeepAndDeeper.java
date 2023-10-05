@@ -8,20 +8,19 @@ import com.deepanddeeper.deepanddeeper.commands.party.PartyKickCommand;
 import com.deepanddeeper.deepanddeeper.events.GameEventListener;
 import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
 import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
-import com.deepanddeeper.deepanddeeper.game.Game;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
+import com.deepanddeeper.deepanddeeper.items.ItemManager;
+import com.deepanddeeper.deepanddeeper.items.Weapon;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
 
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
 
-import com.deepanddeeper.deepanddeeper.weapons.Weapon;
-import com.deepanddeeper.deepanddeeper.weapons.WeaponHolder;
 import org.bukkit.Bukkit;
 
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,13 +36,12 @@ public final class DeepAndDeeper extends JavaPlugin {
 	private FileConfiguration config = this.getConfig();
 	public Database database;
 
-	public WeaponHolder weaponHolder;
-
+	public ItemManager itemManager = new ItemManager(this);
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
 
-	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+	private Scoreboard scoreboard;
 	public Team playingTeam;
 
 	private void registerListeners() {
@@ -81,6 +79,8 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public void onEnable() {
 		Bukkit.getWorld("world").setSpawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
 
+		this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+
 		try {
 			this.playingTeam = this.scoreboard.registerNewTeam("playing");
 			this.playingTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
@@ -97,9 +97,12 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		this.saveDefaultConfig();
 
-		this.weaponHolder = new WeaponHolder(((List<Object>) this.getConfig().getList("weapons")).stream()
+		((List<Object>) this.getConfig().getList("weapons")).stream()
 				.map(weapon -> Weapon.deserialize((Map<String, Object>) weapon))
-				.toList());
+				.forEach(w -> {
+					this.itemManager.registerItem(w);
+					this.getLogger().info("Registered weapon " + w.name());
+				});
 
 		this.registerCommands();
 		this.registerListeners();

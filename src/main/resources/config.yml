@@ -1,21 +1,25 @@
 database-uri: "jdbc:postgresql://localhost/deepanddeeper?user=postgres&password=postgres"
 weapons:
   - id: "cool_sword"
-    name: "&7Basic &fSword"
+    name: "§7Basic §fSword"
     lore:
       - "The most basic of swords."
-      - "Some more &btext&r."
+      - "Some more §btext§r."
     damage: 50.0
     # cooldown in seconds
     cooldown: 2.5
+    material: "IRON_SWORD"
+    price: 300
     classes:
       - "warrior"
   - id: "epic_sword"
-    name: "&eEpic &fSword"
+    name: "§eEpic §fSword"
     lore:
       - "A slightly better sword."
     damage: 70.0
     cooldown: 2.4
+    material: "DIAMOND_SWORD"
+    price: 800
     classes:
       - "warrior"
 enemies:

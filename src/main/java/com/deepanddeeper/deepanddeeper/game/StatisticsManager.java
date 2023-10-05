@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StatisticsManager {
@@ -12,6 +13,24 @@ public class StatisticsManager {
 
 	public StatisticsManager(DeepAndDeeper plugin) {
 		this.plugin = plugin;
+	}
+
+	public int getCoins(Player player) throws SQLException {
+		Connection connection = this.plugin.database.getConnection();
+
+		PreparedStatement statement = connection.prepareStatement("""
+			SELECT "coins" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
+		""");
+
+		statement.setObject(1, player.getUniqueId());
+
+		ResultSet result = statement.executeQuery();
+
+		if (!result.next()) {
+			return 0;
+		}
+
+		return result.getInt("coins");
 	}
 
 	public void addKill(Player player) throws SQLException {

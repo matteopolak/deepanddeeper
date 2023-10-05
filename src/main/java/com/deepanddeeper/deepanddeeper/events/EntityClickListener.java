@@ -40,7 +40,7 @@ public class EntityClickListener implements Listener {
 	}
 
 	@EventHandler
-	public void onPlayerEntityClick(PlayerInteractEntityEvent event) {
+	public void onPlayerEntityClick(PlayerInteractEntityEvent event) throws Exception {
 		if (!event.getHand().equals(EquipmentSlot.HAND)) return;
 
 		UUID entityId = event.getRightClicked().getUniqueId();
