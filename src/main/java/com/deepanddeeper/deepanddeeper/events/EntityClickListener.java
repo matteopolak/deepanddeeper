@@ -48,7 +48,7 @@ public class EntityClickListener implements Listener {
 
 		UUID entityId = event.getRightClicked().getUniqueId();
 
-		event.getPlayer().sendMessage(entityId.toString());
+		// event.getPlayer().sendMessage(entityId.toString());
 
 		Action action = this.actions.get(entityId);
 

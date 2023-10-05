@@ -37,7 +37,7 @@ public class GameEventListener implements Listener {
 
 		if (killer != null) {
 			this.plugin.statisticsManager.addKill(killer);
-			game.sendMessage(String.format("§c§l> §f%s §7was killed by §f%s.", player.getName(), killer.getName()));
+			game.sendMessage(String.format("§c§l> §f%s §7was killed by §f%s§7.", player.getName(), killer.getName()));
 		} else {
 			game.sendMessage(String.format("§c§l> §f%s §7has died!", player.getName()));
 		}

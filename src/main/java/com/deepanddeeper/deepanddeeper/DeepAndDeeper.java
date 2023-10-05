@@ -5,22 +5,19 @@ import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyAcceptCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyInviteCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyKickCommand;
-import com.deepanddeeper.deepanddeeper.events.GameEventListener;
-import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
-import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
+import com.deepanddeeper.deepanddeeper.events.*;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
 import com.deepanddeeper.deepanddeeper.items.ItemManager;
 import com.deepanddeeper.deepanddeeper.items.Weapon;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
 
-import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
-
 import org.bukkit.Bukkit;
 
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -52,6 +49,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new PlayerJoinListener(this),
 			new EntityClickListener(this),
 			new GameEventListener(this),
+			new WizardEventListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -98,7 +96,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 		this.saveDefaultConfig();
 
 		((List<Object>) this.getConfig().getList("weapons")).stream()
-				.map(weapon -> Weapon.deserialize((Map<String, Object>) weapon))
+				.map(weapon -> Weapon.deserialize(this, (Map<String, Object>) weapon))
 				.forEach(w -> {
 					this.itemManager.registerItem(w);
 					this.getLogger().info("Registered weapon " + w.name());

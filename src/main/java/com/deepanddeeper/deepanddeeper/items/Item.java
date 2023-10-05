@@ -1,10 +1,12 @@
 package com.deepanddeeper.deepanddeeper.items;
 
+import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +20,7 @@ public class Item {
     protected String id;
     protected int price;
 
-    public Item(String id, int price, String name, Material material, int amount, List<String> lore) {
+    public Item(DeepAndDeeper plugin, String id, int price, String name, Material material, int amount, List<String> lore) {
         this.id = id;
         this.price = price;
         this.name = Component.text(name);
@@ -27,7 +29,7 @@ public class Item {
 
         this.lore = lore
           .stream()
-          .map(Component::text)
+          .map(l -> l == null ? Component.text("") : Component.text(l))
           .toList();
 
         this.item = new ItemStack(this.material, this.amount);
@@ -36,6 +38,9 @@ public class Item {
 
         meta.displayName(this.name);
         meta.lore(this.lore);
+        meta
+          .getPersistentDataContainer()
+          .set(plugin.itemManager.idKey, PersistentDataType.STRING, this.id());
 
         this.item.setItemMeta(meta);
     }

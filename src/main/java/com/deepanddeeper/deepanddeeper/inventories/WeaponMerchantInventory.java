@@ -28,7 +28,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 		this.inventory = Bukkit.createInventory(this, 54);
 
 		this.plugin.itemManager.items.values().forEach(item -> {
-			ItemStack itemStack = item.item();
+			ItemStack itemStack = item.item().clone();
 
 			// add another lore line to show price
 			ItemMeta meta = itemStack.getItemMeta();
@@ -44,9 +44,6 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 			} else {
 				meta.lore(List.of(Component.space(), price));
 			}
-
-			meta.getPersistentDataContainer()
-				.set(plugin.itemManager.idKey, PersistentDataType.STRING, item.id());
 
 			itemStack.setItemMeta(meta);
 
@@ -100,7 +97,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 				return;
 			}
 
-			var remaining = event.getWhoClicked().getInventory().addItem(clickedItem);
+			var remaining = event.getWhoClicked().getInventory().addItem(item.item());
 
 			if (!remaining.isEmpty()) {
 				event.getWhoClicked().sendMessage("§a§l$ §7You don't have enough space in your inventory.");

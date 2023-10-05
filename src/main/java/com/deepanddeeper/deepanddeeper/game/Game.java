@@ -91,19 +91,6 @@ public class Game extends BukkitRunnable {
 				this.sendActionBar(Component.text("§fGame starting..."));
 				this.countdown--;
 
-				for (int i = 0; i < this.parties.size(); ++i) {
-					Location spawn = this.map.spawns().get(i).location(this.world);
-
-					for (Player player : this.parties.get(i).getMembers()) {
-						player.setGameMode(GameMode.ADVENTURE);
-						player.teleport(spawn);
-						this.plugin.playingTeam.addPlayer(player);
-					}
-				}
-			} else {
-				this.sendActionBar(Component.text(""));
-				this.state = GameState.STARTED;
-
 				var borders = this.map.borders();
 				var firstBorder = borders.get(0);
 
@@ -128,6 +115,19 @@ public class Game extends BukkitRunnable {
 				} else {
 					this.cancel();
 				}
+
+				for (int i = 0; i < this.parties.size(); ++i) {
+					Location spawn = this.map.spawns().get(i).location(this.world);
+
+					for (Player player : this.parties.get(i).getMembers()) {
+						player.setGameMode(GameMode.ADVENTURE);
+						player.teleport(spawn);
+						this.plugin.playingTeam.addPlayer(player);
+					}
+				}
+			} else {
+				this.sendActionBar(Component.text(""));
+				this.state = GameState.STARTED;
 			}
 		} else {
 			this.borderTimeLeft--;

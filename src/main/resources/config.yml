@@ -22,6 +22,16 @@ weapons:
     price: 800
     classes:
       - "warrior"
+  - id: "wizard_fireball"
+    name: "§cFireball"
+    lore:
+      - "A fireball spell."
+    damage: 100.0
+    cooldown: 3.0
+    material: "FIRE_CHARGE"
+    price: 500
+    classes:
+      - wizard
 enemies:
   - id: "skeleton"
     name: "Skeleton"
