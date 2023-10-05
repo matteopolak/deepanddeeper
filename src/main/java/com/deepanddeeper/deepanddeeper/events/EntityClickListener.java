@@ -3,7 +3,9 @@ package com.deepanddeeper.deepanddeeper.events;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.actions.Action;
 import com.deepanddeeper.deepanddeeper.actions.JoinQueueAction;
+import com.deepanddeeper.deepanddeeper.actions.OpenStashAction;
 import com.deepanddeeper.deepanddeeper.inventories.InventoryHolderWithId;
+import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
 import com.deepanddeeper.deepanddeeper.inventories.WeaponMerchantInventory;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,7 +29,8 @@ public class EntityClickListener implements Listener {
 		};
 
 		Action[] actions = {
-			new JoinQueueAction(plugin)
+			new JoinQueueAction(plugin),
+			new OpenStashAction(plugin)
 		};
 
 		for (InventoryHolderWithId inventory : inventories) {
@@ -69,6 +72,12 @@ public class EntityClickListener implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) throws SQLException {
 		var inventory = event.getInventory();
+
+		if (inventory.getHolder(false) instanceof PlayerStashInventory playerInventory) {
+			playerInventory.onInventoryClick(event);
+
+			return;
+		}
 
 		for (var entry : this.inventories.entrySet()) {
 			if (entry.getValue().getInventory().equals(inventory)) {

@@ -1,6 +1,7 @@
 package com.deepanddeeper.deepanddeeper.map;
 
 import com.deepanddeeper.deepanddeeper.generators.VoidGenerator;
+import com.deepanddeeper.deepanddeeper.util.Pair;
 import com.fastasyncworldedit.core.FaweAPI;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -37,6 +38,23 @@ public class Map {
 		this.clipboard = ClipboardFormats.findByFile(this.file);
 
 		Bukkit.getLogger().info("Successfully loaded map " + this.file.exists());
+	}
+
+	/**
+	 * Returns a list of pairs of the form (x, z) where x is the side-length of the border,
+	 * and z is the time in seconds at which the border should shrink to that size.
+	 *
+	 * Note that the first pair is reached instantly, regardless of the delay.
+	 */
+	public List<Pair<Double, Long>> borders() {
+		return List.of(
+			Pair.of(100d * 2 + 1, 0L),
+			Pair.of(50d * 2 + 1, 60L),
+			Pair.of(25d * 2 + 1, 120L),
+			Pair.of(12.5d * 2 + 1, 180L),
+			Pair.of(6.25d * 2 + 1, 240L),
+			Pair.of(0d, 300L)
+		);
 	}
 
 	public Map spawns(List<Spawn> spawns) {

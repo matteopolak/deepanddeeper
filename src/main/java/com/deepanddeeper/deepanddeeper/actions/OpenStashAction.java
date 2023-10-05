@@ -1,10 +1,12 @@
 package com.deepanddeeper.deepanddeeper.actions;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -24,37 +26,14 @@ public class OpenStashAction implements Action {
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("53d4513c-20c9-48d9-abcc-314305e1a891");
+		return UUID.fromString("c8daefdf-5daf-41ed-8109-e0a2995519fa");
 	}
 
 	@Override
-	public void perform(PlayerInteractEntityEvent event) throws SQLException {
-		PreparedStatement getProfileIdStatement = this.plugin.database.getConnection().prepareStatement("""
-			SELECT "id" FROM "profiles" WHERE "user" = ? AND "active" = TRUE;
-		""");
+	public void perform(PlayerInteractEntityEvent event) {
+		InventoryHolder holder = new PlayerStashInventory(this.plugin, event.getPlayer().getUniqueId());
 
-		getProfileIdStatement.setObject(1, event.getPlayer().getUniqueId());
-
-		var profileIdResultSet = getProfileIdStatement.executeQuery();
-
-		if (!profileIdResultSet.next()) {
-			event.getPlayer().sendMessage("§c§l> §7You do not have an active profile!");
-			return;
-		}
-
-		int profileId = profileIdResultSet.getInt("id");
-
-		// open the player's stash from the database, selecting items within slots [0, 53]
-		PreparedStatement statement = this.plugin.database.getConnection().prepareStatement("""
-			SELECT "item_id" FROM "stash" WHERE "user" = ? AND "slot" BETWEEN 0 AND 53 AND "profile" = ? ORDER BY "slot" ASC;
-		""");
-
-		statement.setObject(1, event.getPlayer().getUniqueId());
-
-		// get the result set
-		var resultSet = statement.executeQuery();
-
-		// create a new inventory
-		var inventory = Bukkit.createInventory(null, 54, Component.text("Stash"));
+		event.getPlayer()
+			.openInventory(holder.getInventory());
 	}
 }
