@@ -7,6 +7,10 @@ import com.deepanddeeper.deepanddeeper.actions.OpenStashAction;
 import com.deepanddeeper.deepanddeeper.inventories.InventoryHolderWithId;
 import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
 import com.deepanddeeper.deepanddeeper.inventories.WeaponMerchantInventory;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -48,7 +52,11 @@ public class EntityClickListener implements Listener {
 
 		UUID entityId = event.getRightClicked().getUniqueId();
 
-		// event.getPlayer().sendMessage(entityId.toString());
+		TextComponent text = Component.text(entityId.toString())
+			.clickEvent(ClickEvent.suggestCommand(entityId.toString()))
+			.hoverEvent(HoverEvent.showText(Component.text("Click to copy")));
+
+		event.getPlayer().sendMessage(text);
 
 		Action action = this.actions.get(entityId);
 

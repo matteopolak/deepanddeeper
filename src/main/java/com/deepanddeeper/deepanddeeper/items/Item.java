@@ -20,7 +20,10 @@ public class Item {
     protected String id;
     protected int price;
 
+    protected DeepAndDeeper plugin;
+
     public Item(DeepAndDeeper plugin, String id, int price, String name, Material material, int amount, List<String> lore) {
+        this.plugin = plugin;
         this.id = id;
         this.price = price;
         this.name = Component.text(name);

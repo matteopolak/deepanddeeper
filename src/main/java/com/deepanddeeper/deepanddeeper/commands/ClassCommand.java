@@ -37,6 +37,12 @@ public class ClassCommand implements CommandWithName {
 				return true;
 			}
 
+			if (this.plugin.gameManager.isInGame(player)) {
+				player.sendMessage("§c§l> §7You cannot change your class while in a game!");
+
+				return true;
+			}
+
 			this.plugin.classManager.switchClass(player, classType);
 			player.sendMessage(String.format("§e§l> §7You have switched to the %s §7class.", classType.colouredName()));
 		}

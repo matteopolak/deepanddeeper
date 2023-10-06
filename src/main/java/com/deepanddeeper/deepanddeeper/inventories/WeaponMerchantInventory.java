@@ -53,7 +53,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("2dceb724-dd79-43c3-8400-6f404480c99b");
+		return UUID.fromString("54c5177c-999a-40a5-ab4a-6ce4bcd19bce");
 	}
 
 	@Override

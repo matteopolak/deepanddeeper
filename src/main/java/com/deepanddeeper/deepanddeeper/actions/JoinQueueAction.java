@@ -21,7 +21,7 @@ public class JoinQueueAction implements Action {
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("53d4513c-20c9-48d9-abcc-314305e1a891");
+		return UUID.fromString("366d8a2f-2c1e-47e6-9a57-ff872f2a1e19");
 	}
 
 	@Override

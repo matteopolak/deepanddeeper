@@ -1,40 +1,81 @@
 database-uri: "jdbc:postgresql://localhost/deepanddeeper?user=postgres&password=postgres"
 weapons:
-  - id: "cool_sword"
-    name: "§7Basic §fSword"
+  - id: cool_sword
+    name: §7Basic §fSword
     lore:
-      - "The most basic of swords."
-      - "Some more §btext§r."
+      - "§8The most basic of swords."
+      - ""
+      - "§7Damage: §c50"
+      - "§7Cooldown: §b2.5s"
     damage: 50.0
-    # cooldown in seconds
     cooldown: 2.5
-    material: "IRON_SWORD"
+    material: IRON_SWORD
     price: 300
     classes:
-      - "warrior"
-  - id: "epic_sword"
-    name: "§eEpic §fSword"
+      - warrior
+  - id: epic_sword
+    name: §eEpic §fSword
     lore:
-      - "A slightly better sword."
+      - "§8A slightly better sword."
+      - ""
+      - "§7Damage: §c70"
+      - "§7Cooldown: §b2.4s"
     damage: 70.0
     cooldown: 2.4
-    material: "DIAMOND_SWORD"
+    material: DIAMOND_SWORD
     price: 800
     classes:
-      - "warrior"
+      - warrior
   - id: "wizard_fireball"
     name: "§cFireball"
     lore:
-      - "A fireball spell."
+      - "§8Shoots a fireball out of your fingers."
     damage: 100.0
-    cooldown: 3.0
+    cooldown: 4.0
     material: "FIRE_CHARGE"
+    price: 500
+    classes:
+      - wizard
+  - id: "wizard_lightning"
+    name: "§eLightning"
+    lore:
+      - "§8Summons a lightning bolt."
+      - ""
+      - "§7Damage: §c100"
+      - "§7Cooldown: §b6s"
+    damage: 100.0
+    cooldown: 6.0
+    material: "BLAZE_ROD"
+    price: 500
+    classes:
+      - wizard
+  - id: "wizard_haste"
+    name: "§aHaste"
+    lore:
+      - "§8Gives you haste."
+      - ""
+      - "§7Cooldown: §b8s"
+    damage: 100.0
+    cooldown: 8.0
+    material: "SUGAR"
+    price: 500
+    classes:
+      - wizard
+  - id: "wizard_invisibility"
+    name: "§bInvisibility"
+    lore:
+      - "§8Enshrouds you in invisibility."
+      - ""
+      - "§7Cooldown: §b10s"
+    damage: 100.0
+    cooldown: 20.0
+    material: "GOLDEN_CARROT"
     price: 500
     classes:
       - wizard
 armor:
   - id: "wizard_helmet"
-    name: "§cWizard's Helmet"
+    name: "§5Wizard's Helmet"
     lore:
       - "§8A wizard's helmet."
     material: "LEATHER_HELMET"
@@ -42,7 +83,7 @@ armor:
     classes:
       - wizard
   - id: "wizard_chestplate"
-    name: "§cWizard's Chestplate"
+    name: "§5Wizard's Chestplate"
     lore:
       - "§8A wizard's chestplate."
     material: "LEATHER_CHESTPLATE"
@@ -50,7 +91,7 @@ armor:
     classes:
       - wizard
   - id: "wizard_leggings"
-    name: "§cWizard's Leggings"
+    name: "§5Wizard's Leggings"
     lore:
       - "§8A wizard's leggings."
     material: "LEATHER_LEGGINGS"
@@ -58,7 +99,7 @@ armor:
     classes:
       - wizard
   - id: "wizard_boots"
-    name: "§cWizard's Boots"
+    name: "§5Wizard's Boots"
     lore:
       - "§8A wizard's boots."
     material: "LEATHER_BOOTS"

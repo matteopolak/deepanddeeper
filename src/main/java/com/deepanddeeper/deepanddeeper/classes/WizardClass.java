@@ -15,22 +15,12 @@ public class WizardClass extends GameClass {
 	public WizardClass(DeepAndDeeper plugin) {
 		super(plugin);
 
-		Item fireball = this.plugin.itemManager.item("wizard_fireball");
 		ItemStack[] defaultItems = new ItemStack[41];
 
-		defaultItems[6] = fireball.item();
-
-		// TODO: change this to the lightning spell
-		defaultItems[5] = fireball.item();
-
-		// TODO: change this to the invisibility spell
-		defaultItems[4] = fireball.item();
-
-		// TODO: change this to the haste spell
-		defaultItems[3] = fireball.item();
-
-		// TODO: change this to the wizard staff
-		defaultItems[0] = fireball.item();
+		defaultItems[6] = this.plugin.itemManager.item("wizard_fireball").item();
+		defaultItems[5] = this.plugin.itemManager.item("wizard_lightning").item();
+		defaultItems[4] = this.plugin.itemManager.item("wizard_invisibility").item();
+		defaultItems[3] = this.plugin.itemManager.item("wizard_haste").item();
 
 		// set the armour to all purple leather
 		defaultItems[39] = this.plugin.itemManager.item("wizard_helmet").item();
@@ -49,6 +39,18 @@ public class WizardClass extends GameClass {
 		if (!this.readInventory(player, GameClassType.WIZARD)) {
 			player.getInventory().setContents(this.defaultItems);
 		}
+
+		// add weakness without using a potion effect
+		player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)
+			.setBaseValue(0.5);
+
+		// add slowness without using a potion effect
+		player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+			.setBaseValue(0.1);
+
+		// fully restore health and hunger
+		player.setHealth(16);
+		player.setFoodLevel(20);
 	}
 
 	@Override
@@ -58,5 +60,13 @@ public class WizardClass extends GameClass {
 
 		this.saveInventory(player, GameClassType.WIZARD);
 		player.getInventory().clear();
+
+		// remove weakness without using a potion effect
+		player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)
+			.setBaseValue(1);
+
+		// remove slowness without using a potion effect
+		player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+			.setBaseValue(0.2);
 	}
 }

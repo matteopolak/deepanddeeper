@@ -18,9 +18,7 @@ import com.deepanddeeper.deepanddeeper.party.PartyManager;
 import org.bukkit.Bukkit;
 
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -53,7 +51,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new PlayerJoinListener(this),
 			new EntityClickListener(this),
 			new GameEventListener(this),
-			new WizardEventListener(this),
+			new ClassEventListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -108,14 +106,14 @@ public final class DeepAndDeeper extends JavaPlugin {
 				.map(weapon -> Weapon.deserialize(this, (Map<String, Object>) weapon))
 				.forEach(w -> {
 					this.itemManager.registerItem(w);
-					this.getLogger().info("Registered weapon " + w.name());
+					this.getLogger().info("Registered weapon " + w.name().content());
 				});
 
 		((List<Object>) this.getConfig().getList("armor")).stream()
 			.map(armor -> Armor.deserialize(this, (Map<String, Object>) armor))
 			.forEach(w -> {
 				this.itemManager.registerItem(w);
-				this.getLogger().info("Registered armor " + w.name());
+				this.getLogger().info("Registered armor " + w.name().content());
 			});
 
 		this.registerCommands();

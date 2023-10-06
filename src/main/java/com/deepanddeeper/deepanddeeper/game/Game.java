@@ -24,7 +24,7 @@ public class Game extends BukkitRunnable {
 	private List<Party> parties;
 	private World world;
 	private Map map;
-	private boolean ended = false;
+	private boolean ended = true;
 	private GameState state;
 	private int borderIndex = 0;
 	private long borderTimeLeft = 0;
@@ -115,6 +115,8 @@ public class Game extends BukkitRunnable {
 				} else {
 					this.cancel();
 				}
+
+				this.ended = false;
 
 				for (int i = 0; i < this.parties.size(); ++i) {
 					Location spawn = this.map.spawns().get(i).location(this.world);

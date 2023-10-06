@@ -26,7 +26,7 @@ public class OpenStashAction implements Action {
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("c8daefdf-5daf-41ed-8109-e0a2995519fa");
+		return UUID.fromString("79295d34-3120-4b0b-bfab-d301bfebb3b5");
 	}
 
 	@Override
