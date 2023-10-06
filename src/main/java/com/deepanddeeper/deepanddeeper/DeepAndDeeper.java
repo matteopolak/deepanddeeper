@@ -14,6 +14,7 @@ import com.deepanddeeper.deepanddeeper.party.PartyManager;
 
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
 
+import com.deepanddeeper.deepanddeeper.scoreboard.ScoreboardManager;
 import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import com.deepanddeeper.deepanddeeper.weapons.WeaponHolder;
 import org.bukkit.Bukkit;
@@ -38,6 +39,8 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
+
+	public ScoreboardManager scoreboardManager = new ScoreboardManager();
 
 	private void registerListeners() {
 		// Add event listeners here

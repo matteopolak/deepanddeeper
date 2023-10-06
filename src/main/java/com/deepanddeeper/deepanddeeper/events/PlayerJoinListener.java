@@ -85,5 +85,9 @@ public class PlayerJoinListener implements Listener {
 		} finally {
 			connection.setAutoCommit(true);
 		}
+
+		//Initialize Scoreboard
+		Scoreboard scoreboard = player.getScoreboard();
+		plugin.scoreboardManager.update(scoreboard);
 	}
 }
