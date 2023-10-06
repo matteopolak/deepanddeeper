@@ -1,39 +1,27 @@
 package com.deepanddeeper.deepanddeeper.events;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.weapons.Weapon;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scoreboard.Criteria;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerJoinListener implements Listener {
 	private DeepAndDeeper plugin;
-	private Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
-	private Team playingTeam;
 
 	public PlayerJoinListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;
-
-		try {
-			this.playingTeam = this.scoreboard.registerNewTeam("playing");
-			this.playingTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
-		} catch (IllegalArgumentException e) {
-			// The team already exists
-			this.playingTeam = this.scoreboard.getTeam("playing");
-		}
 	}
 
 	@EventHandler
@@ -44,7 +32,7 @@ public class PlayerJoinListener implements Listener {
 		player.teleport(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
 
 		// Remove the player from the "playing" team when they join
-		boolean wasInGame = this.playingTeam.removePlayer(player);
+		boolean wasInGame = this.plugin.playingTeam.removePlayer(player);
 
 		if (wasInGame) {
 			// now using colour escape codes
@@ -86,8 +74,11 @@ public class PlayerJoinListener implements Listener {
 			connection.setAutoCommit(true);
 		}
 
+
 		//Initialize Scoreboard
 		Scoreboard scoreboard = player.getScoreboard();
 		plugin.scoreboardManager.update(scoreboard);
+
+
 	}
 }

@@ -1,47 +1,76 @@
 package com.deepanddeeper.deepanddeeper.items;
 
+import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import net.kyori.adventure.text.Component;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Item {
-    ItemStack item;
+    protected ItemStack item;
     protected TextComponent name = Component.text("Name");
-    private Material material = Material.DIAMOND_SWORD;
-    private List<TextComponent> lore;
+    protected Material material = Material.DIAMOND_SWORD;
+    protected List<TextComponent> lore;
+    protected int amount = 1;
+    protected String id;
+    protected int price;
 
-    private int amount = 1;
+    protected DeepAndDeeper plugin;
 
-    public Item() {
-        initializeItem();
-    }
-
-    public Item(String name, Material material, int amount, String[] lore) {
-        this.name = Component.text("name");
+    public Item(DeepAndDeeper plugin, String id, int price, String name, Material material, int amount, List<String> lore) {
+        this.plugin = plugin;
+        this.id = id;
+        this.price = price;
+        this.name = Component.text(name);
         this.material = material;
         this.amount = amount;
 
+        this.lore = lore
+          .stream()
+          .map(l -> l == null ? Component.text("") : Component.text(l))
+          .toList();
 
-        this.lore = Arrays.stream(lore)
-                .map(Component::text)
-                .toList();
+        this.item = new ItemStack(this.material, this.amount);
 
-        initializeItem();
-    }
-
-    private void initializeItem() {
-        this.item = new ItemStack(this.material, 1);
         ItemMeta meta = item.getItemMeta();
 
         meta.displayName(this.name);
         meta.lore(this.lore);
+        meta
+          .getPersistentDataContainer()
+          .set(plugin.itemManager.idKey, PersistentDataType.STRING, this.id());
 
         this.item.setItemMeta(meta);
     }
 
+    public ItemStack item() {
+        return this.item;
+    }
+
+    public Item name(TextComponent name) {
+        this.name = name;
+        return this;
+    }
+
+    public TextComponent name() {
+        return this.name;
+    }
+
+    public Item lore(List<TextComponent> lore) {
+        this.lore = lore;
+        return this;
+    }
+
+    public String id() {
+        return this.id;
+    }
+
+    public int price() {
+        return this.price;
+    }
 }

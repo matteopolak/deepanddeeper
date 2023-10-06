@@ -1,13 +1,9 @@
 package com.deepanddeeper.deepanddeeper.map;
 
-import com.deepanddeeper.deepanddeeper.weapons.Weapon;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Map;
 
 public class Spawn {

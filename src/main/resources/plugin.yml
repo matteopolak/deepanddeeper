@@ -19,3 +19,6 @@ commands:
   kick:
     description: Kicks a player from your party.
     usage: /kick <player>
+  class:
+    description: Sets your class.
+    usage: /class <class>

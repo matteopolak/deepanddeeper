@@ -36,7 +36,6 @@ public class Party {
         this.members.add(p);
         this.invites.remove(p);
 
-
         return true;
     }
 

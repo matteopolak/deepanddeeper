@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StatisticsManager {
@@ -14,11 +15,29 @@ public class StatisticsManager {
 		this.plugin = plugin;
 	}
 
+	public int getCoins(Player player) throws SQLException {
+		Connection connection = this.plugin.database.getConnection();
+
+		PreparedStatement statement = connection.prepareStatement("""
+			SELECT "coins" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
+		""");
+
+		statement.setObject(1, player.getUniqueId());
+
+		ResultSet result = statement.executeQuery();
+
+		if (!result.next()) {
+			return 0;
+		}
+
+		return result.getInt("coins");
+	}
+
 	public void addKill(Player player) throws SQLException {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "kills" = "kills" + 1 WHERE "uuid" = ? AND "active" = TRUE;
+			UPDATE "profile" SET "kills" = "kills" + 1 WHERE "user" = ? AND "active" = TRUE;
 		""");
 
 		statement.setObject(1, player.getUniqueId());
@@ -29,7 +48,7 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "deaths" = "deaths" + 1 WHERE "uuid" = ? AND "active" = TRUE;
+			UPDATE "profile" SET "deaths" = "deaths" + 1 WHERE "user" = ? AND "active" = TRUE;
 		""");
 
 		statement.setObject(1, player.getUniqueId());
@@ -40,7 +59,7 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "wins" = "wins" + 1 WHERE "uuid" = ? AND "active" = TRUE;
+			UPDATE "profile" SET "wins" = "wins" + 1 WHERE "user" = ? AND "active" = TRUE;
 		""");
 
 		statement.setObject(1, player.getUniqueId());
@@ -51,7 +70,7 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "losses" = "losses" + 1 WHERE "uuid" = ? AND "active" = TRUE;
+			UPDATE "profile" SET "losses" = "losses" + 1 WHERE "user" = ? AND "active" = TRUE;
 		""");
 
 		statement.setObject(1, player.getUniqueId());

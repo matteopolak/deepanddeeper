@@ -1,13 +1,17 @@
 package com.deepanddeeper.deepanddeeper.events;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.classes.GameClass;
 import com.deepanddeeper.deepanddeeper.game.Game;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 import java.sql.SQLException;
 
@@ -21,12 +25,10 @@ public class GameEventListener implements Listener {
 	// on player death
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) throws SQLException {
-		Bukkit.broadcastMessage("lmao " + event.getPlayer().getName() + " died");
-
 		Player player = event.getPlayer();
 		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-		if (game == null) {
+		if (game == null || game.hasEnded()) {
 			return;
 		}
 
@@ -36,13 +38,35 @@ public class GameEventListener implements Listener {
 		player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 
 		Player killer = player.getKiller();
-		Bukkit.broadcastMessage("they were killed by " + (killer == null ? "no one?" : killer.getName()));
 
 		if (killer != null) {
 			this.plugin.statisticsManager.addKill(killer);
-			game.sendMessage(String.format("§c§l> §f%s §7was killed by §f%s.", player.getName(), killer.getName()));
+			game.sendMessage(String.format("§c§l> §f%s §7was killed by §f%s§7.", player.getName(), killer.getName()));
 		} else {
 			game.sendMessage(String.format("§c§l> §f%s §7has died!", player.getName()));
+		}
+	}
+
+	@EventHandler
+	public void onFoodLevelChange(FoodLevelChangeEvent event) {
+		if (event.getEntity() instanceof Player player) {
+			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+
+			if (game != null && !game.hasEnded() && player.getWorld() == game.getWorld()) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.getWhoClicked() instanceof Player player) {
+			GameClass gameClass = this.plugin.classManager.classes.get(player.getUniqueId());
+
+			// disable modifying the hotbar when a class is equipped
+			if (gameClass != null && event.getClickedInventory().getType() == InventoryType.PLAYER && event.getSlot() < 9) {
+				event.setCancelled(true);
+			}
 		}
 	}
 }

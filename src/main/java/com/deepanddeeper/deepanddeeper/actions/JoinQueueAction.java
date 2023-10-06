@@ -1,6 +1,7 @@
 package com.deepanddeeper.deepanddeeper.actions;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.game.Game;
 import com.deepanddeeper.deepanddeeper.game.Queue;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
@@ -20,7 +21,7 @@ public class JoinQueueAction implements Action {
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("53d4513c-20c9-48d9-abcc-314305e1a891");
+		return UUID.fromString("366d8a2f-2c1e-47e6-9a57-ff872f2a1e19");
 	}
 
 	@Override
@@ -28,10 +29,13 @@ public class JoinQueueAction implements Action {
 		Player player = event.getPlayer();
 		Party party = this.plugin.partyManager.getParty(player);
 
-		player.sendMessage("leader: " + party.getLeader().getName() + " you: " + player.getName(), " equal? " + (party.getLeader() == player));
-
 		if (party.getLeader() != player) {
 			player.sendMessage("§c§l> §7Only the party leader can join the queue!");
+			return;
+		}
+
+		if (this.plugin.gameManager.isInGame(player)) {
+			player.sendMessage("§c§l> §7You cannot join the queue while in a game!");
 			return;
 		}
 
@@ -39,6 +43,12 @@ public class JoinQueueAction implements Action {
 			this.plugin.gameManager.queue.remove(party);
 
 			player.sendMessage("§a§l> §7You have left the queue!");
+
+			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
+				"§fWaiting for parties... (§b%d§f/%d)",
+				this.plugin.gameManager.queue.size(),
+				this.plugin.gameManager.queue.maxSize()
+			)));
 		} else {
 			player.sendMessage("§a§l> §7You have joined the queue!");
 

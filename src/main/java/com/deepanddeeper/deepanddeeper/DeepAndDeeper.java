@@ -1,22 +1,22 @@
 package com.deepanddeeper.deepanddeeper;
 
 
+import com.deepanddeeper.deepanddeeper.classes.ClassManager;
+import com.deepanddeeper.deepanddeeper.commands.ClassCommand;
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyAcceptCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyInviteCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyKickCommand;
-import com.deepanddeeper.deepanddeeper.events.GameEventListener;
-import com.deepanddeeper.deepanddeeper.events.PartyEventListener;
-import com.deepanddeeper.deepanddeeper.events.PlayerJoinListener;
+import com.deepanddeeper.deepanddeeper.events.*;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
+import com.deepanddeeper.deepanddeeper.items.Armor;
+import com.deepanddeeper.deepanddeeper.items.ItemManager;
+import com.deepanddeeper.deepanddeeper.items.Weapon;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
-
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
 
 import com.deepanddeeper.deepanddeeper.scoreboard.ScoreboardManager;
-import com.deepanddeeper.deepanddeeper.weapons.Weapon;
-import com.deepanddeeper.deepanddeeper.weapons.WeaponHolder;
 import org.bukkit.Bukkit;
 
 import org.bukkit.Location;
@@ -24,6 +24,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,11 +36,14 @@ public final class DeepAndDeeper extends JavaPlugin {
 	private FileConfiguration config = this.getConfig();
 	public Database database;
 
-	public WeaponHolder weaponHolder;
-
+	public ItemManager itemManager = new ItemManager(this);
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
+	public ClassManager classManager = new ClassManager(this);
+
+	private Scoreboard scoreboard;
+	public Team playingTeam;
 
 	public ScoreboardManager scoreboardManager = new ScoreboardManager();
 
@@ -50,6 +55,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new PlayerJoinListener(this),
 			new EntityClickListener(this),
 			new GameEventListener(this),
+			new ClassEventListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -66,6 +72,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new PartyInviteCommand(this),
 			new PartyAcceptCommand(this),
 			new PartyKickCommand(this),
+			new ClassCommand(this),
 		};
 
 		for (CommandWithName command : commands) {
@@ -73,9 +80,23 @@ public final class DeepAndDeeper extends JavaPlugin {
 		}
 	}
 
+	public static DeepAndDeeper getInstance() {
+		return (DeepAndDeeper) Bukkit.getPluginManager().getPlugin("DeepAndDeeper");
+	}
+
 	@Override
 	public void onEnable() {
 		Bukkit.getWorld("world").setSpawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
+
+		this.scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+
+		try {
+			this.playingTeam = this.scoreboard.registerNewTeam("playing");
+			this.playingTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.ALWAYS);
+		} catch (IllegalArgumentException e) {
+			// The team already exists
+			this.playingTeam = this.scoreboard.getTeam("playing");
+		}
 
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -85,9 +106,19 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		this.saveDefaultConfig();
 
-		this.weaponHolder = new WeaponHolder(((List<Object>) this.getConfig().getList("weapons")).stream()
-				.map(weapon -> Weapon.deserialize((Map<String, Object>) weapon))
-				.toList());
+		((List<Object>) this.getConfig().getList("weapons")).stream()
+				.map(weapon -> Weapon.deserialize(this, (Map<String, Object>) weapon))
+				.forEach(w -> {
+					this.itemManager.registerItem(w);
+					this.getLogger().info("Registered weapon " + w.name().content());
+				});
+
+		((List<Object>) this.getConfig().getList("armor")).stream()
+			.map(armor -> Armor.deserialize(this, (Map<String, Object>) armor))
+			.forEach(w -> {
+				this.itemManager.registerItem(w);
+				this.getLogger().info("Registered armor " + w.name().content());
+			});
 
 		this.registerCommands();
 		this.registerListeners();

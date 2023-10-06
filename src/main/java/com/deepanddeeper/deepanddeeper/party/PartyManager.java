@@ -35,7 +35,7 @@ public class PartyManager {
     public void leave(Player p) {
         Party partyToLeave = parties.get(p.getUniqueId());
 
-        if(partyToLeave.remove(p)) parties.remove(p.getUniqueId());
+        if(partyToLeave.remove(p)) parties.put(p.getUniqueId(), this.create(p));
     }
 
     public @NotNull Party getParty(Player p) {

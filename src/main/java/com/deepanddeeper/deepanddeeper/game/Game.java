@@ -4,10 +4,7 @@ import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.map.Map;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +14,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+enum GameState {
+	STARTING,
+	STARTED,
+}
+
 public class Game extends BukkitRunnable {
 	private DeepAndDeeper plugin;
 	private List<Party> parties;
 	private World world;
 	private Map map;
-	private boolean ended = false;
+	private boolean ended = true;
+	private GameState state;
+	private int borderIndex = 0;
+	private long borderTimeLeft = 0;
 
 	private Set<Player> livingPlayers = new HashSet<>();
 
@@ -35,6 +40,7 @@ public class Game extends BukkitRunnable {
 		this.parties = parties;
 		this.world = world;
 		this.map = map;
+		this.state = GameState.STARTING;
 
 		for (Party party : this.parties) {
 			for (Player player : party.getMembers()) {
@@ -73,28 +79,80 @@ public class Game extends BukkitRunnable {
 
 	@Override
 	public void run() {
-		if (this.countdown > 0) {
-			this.sendActionBar(Component.text(String.format(
-				"§fGame starting in §b%d second%s§f...",
-				this.countdown,
-				this.countdown == 1 ? "" : "s"
-			)));
-			this.countdown--;
-		} else if (this.countdown == 0) {
-			this.sendActionBar(Component.text("§fGame starting..."));
-			this.countdown--;
+		if (this.state == GameState.STARTING) {
+			if (this.countdown > 0) {
+				this.sendActionBar(Component.text(String.format(
+					"§fGame starting in §b%d second%s§f...",
+					this.countdown,
+					this.countdown == 1 ? "" : "s"
+				)));
+				this.countdown--;
+			} else if (this.countdown == 0) {
+				this.sendActionBar(Component.text("§fGame starting..."));
+				this.countdown--;
 
-			for (int i = 0; i < this.parties.size(); ++i) {
-				Location spawn = this.map.spawns().get(i).location(this.world);
+				var borders = this.map.borders();
+				var firstBorder = borders.get(0);
 
-				for (Player player : this.parties.get(i).getMembers()) {
-					player.setGameMode(GameMode.ADVENTURE);
-					player.teleport(spawn);
+				if (firstBorder != null) {
+					this.world.getWorldBorder().setSize(firstBorder.first);
+
+					var secondBorder = borders.get(1);
+
+					if (secondBorder != null) {
+						WorldBorder border = this.world.getWorldBorder();
+
+						border.setDamageBuffer(0);
+						border.setWarningDistance(2);
+						border.setWarningTime(5);
+						border.setSize(secondBorder.first, secondBorder.second);
+
+						this.borderIndex = 2;
+						this.borderTimeLeft = secondBorder.second;
+					} else {
+						this.cancel();
+					}
+				} else {
+					this.cancel();
 				}
+
+				this.ended = false;
+
+				for (int i = 0; i < this.parties.size(); ++i) {
+					Location spawn = this.map.spawns().get(i).location(this.world);
+
+					for (Player player : this.parties.get(i).getMembers()) {
+						player.setGameMode(GameMode.ADVENTURE);
+						player.setFoodLevel(5);
+						player.teleport(spawn);
+
+						this.plugin.playingTeam.addPlayer(player);
+					}
+				}
+			} else {
+				this.sendActionBar(Component.text(""));
+				this.state = GameState.STARTED;
 			}
 		} else {
-			this.sendActionBar(Component.text(""));
-			this.cancel();
+			this.borderTimeLeft--;
+
+			if (this.borderTimeLeft > 0) return;
+
+			var borders = this.map.borders();
+			var border = borders.get(this.borderIndex);
+
+			if (border != null) {
+				this.world.getWorldBorder().setSize(border.first, border.second);
+				this.borderIndex++;
+
+				if (this.borderIndex < borders.size()) {
+					this.borderTimeLeft = border.second;
+				} else {
+					this.cancel();
+				}
+			} else {
+				this.cancel();
+			}
 		}
 	}
 
@@ -128,6 +186,7 @@ public class Game extends BukkitRunnable {
 
 		for (Player p : winningParty.getMembers()) {
 			this.plugin.statisticsManager.addWin(p);
+			this.plugin.playingTeam.removePlayer(player);
 		}
 
 		winningParty.sendMessage("§b§l> §7Your party has won the game!");
@@ -137,6 +196,7 @@ public class Game extends BukkitRunnable {
 
 			for (Player p : party.getMembers()) {
 				this.plugin.statisticsManager.addLoss(p);
+				this.plugin.playingTeam.removePlayer(player);
 			}
 
 			party.sendMessage("§b§l> §7Your party has lost the game.");

@@ -9,5 +9,5 @@ public interface Action {
 	public UUID id();
 
 	// The action to perform
-	public void perform(PlayerInteractEntityEvent event);
+	public void perform(PlayerInteractEntityEvent event) throws Exception;
 }
