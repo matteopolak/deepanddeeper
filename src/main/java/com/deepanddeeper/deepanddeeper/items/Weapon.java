@@ -47,7 +47,6 @@ public class Weapon extends Item {
         long cooldown = this.plugin.itemManager.remainingCooldown(event.getPlayer(), this);
 
         if (cooldown > 0) {
-            event.setCancelled(true);
             event.getPlayer().sendMessage(String.format("§c§l> §f%s §7is on cooldown for §f%,.1f seconds§7.", this.name().content(), ((double) cooldown) / 1_000));
 
             return false;

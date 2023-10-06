@@ -28,7 +28,10 @@ public class ClassEventListener implements Listener {
 		if (itemId == null) return;
 
 		if (this.plugin.itemManager.item(itemId) instanceof Weapon weapon) {
-			if (weapon.canActivate()) weapon.onActivate(event);
+			if (weapon.canActivate()) {
+				event.setCancelled(true);
+				weapon.onActivate(event);
+			}
 		}
 	}
 }
