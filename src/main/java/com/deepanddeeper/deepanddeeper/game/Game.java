@@ -121,7 +121,9 @@ public class Game extends BukkitRunnable {
 
 					for (Player player : this.parties.get(i).getMembers()) {
 						player.setGameMode(GameMode.ADVENTURE);
+						player.setFoodLevel(5);
 						player.teleport(spawn);
+
 						this.plugin.playingTeam.addPlayer(player);
 					}
 				}

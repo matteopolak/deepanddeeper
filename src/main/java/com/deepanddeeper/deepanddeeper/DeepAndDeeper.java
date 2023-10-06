@@ -1,6 +1,8 @@
 package com.deepanddeeper.deepanddeeper;
 
 
+import com.deepanddeeper.deepanddeeper.classes.ClassManager;
+import com.deepanddeeper.deepanddeeper.commands.ClassCommand;
 import com.deepanddeeper.deepanddeeper.commands.GetWorldCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyAcceptCommand;
 import com.deepanddeeper.deepanddeeper.commands.party.PartyInviteCommand;
@@ -8,6 +10,7 @@ import com.deepanddeeper.deepanddeeper.commands.party.PartyKickCommand;
 import com.deepanddeeper.deepanddeeper.events.*;
 import com.deepanddeeper.deepanddeeper.game.GameManager;
 import com.deepanddeeper.deepanddeeper.game.StatisticsManager;
+import com.deepanddeeper.deepanddeeper.items.Armor;
 import com.deepanddeeper.deepanddeeper.items.ItemManager;
 import com.deepanddeeper.deepanddeeper.items.Weapon;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
@@ -37,6 +40,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
+	public ClassManager classManager = new ClassManager(this);
 
 	private Scoreboard scoreboard;
 	public Team playingTeam;
@@ -66,11 +70,16 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new PartyInviteCommand(this),
 			new PartyAcceptCommand(this),
 			new PartyKickCommand(this),
+			new ClassCommand(this),
 		};
 
 		for (CommandWithName command : commands) {
 			this.getCommand(command.commandName()).setExecutor(command);
 		}
+	}
+
+	public static DeepAndDeeper getInstance() {
+		return (DeepAndDeeper) Bukkit.getPluginManager().getPlugin("DeepAndDeeper");
 	}
 
 	@Override
@@ -101,6 +110,13 @@ public final class DeepAndDeeper extends JavaPlugin {
 					this.itemManager.registerItem(w);
 					this.getLogger().info("Registered weapon " + w.name());
 				});
+
+		((List<Object>) this.getConfig().getList("armor")).stream()
+			.map(armor -> Armor.deserialize(this, (Map<String, Object>) armor))
+			.forEach(w -> {
+				this.itemManager.registerItem(w);
+				this.getLogger().info("Registered armor " + w.name());
+			});
 
 		this.registerCommands();
 		this.registerListeners();
