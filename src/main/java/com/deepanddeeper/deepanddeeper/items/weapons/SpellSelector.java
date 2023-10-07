@@ -12,8 +12,8 @@ import java.util.List;
 public class SpellSelector extends Weapon {
 	private final SpellSelectorInventory inventory;
 
-	public SpellSelector(DeepAndDeeper plugin, String id, int price, String name, Material material, List<String> lore) {
-		super(plugin, id, price, name, material, lore);
+	public SpellSelector(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
+		super(plugin, id, buyPrice, sellPrice, name, material, lore);
 
 		this.inventory = new SpellSelectorInventory(plugin);
 	}

@@ -32,7 +32,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 
 			// add another lore line to show price
 			ItemMeta meta = itemStack.getItemMeta();
-			Component price = Component.text(String.format("§fPrice: §6%d §ecoins", item.price()));
+			Component price = Component.text(String.format("§fPrice: §6%d §ecoins", item.buyPrice()));
 
 			if (meta.hasLore()) {
 				List<Component> lore = meta.lore();
@@ -75,7 +75,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 			""")) {
 			connection.setAutoCommit(false);
 
-			statement.setInt(1, item.price());
+			statement.setInt(1, item.buyPrice());
 			statement.setObject(2, event.getWhoClicked().getUniqueId());
 
 			ResultSet result = statement.executeQuery();
@@ -89,8 +89,8 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 
 			if (coins < 0) {
 				event.getWhoClicked().sendMessage(
-					String.format("§a§l$ §7You need §6%d coins§7 to purchase %s§7.", item.price(), item.name().content()),
-					String.format("§a§l$ §7You only have §6%d coins§7.", coins + item.price())
+					String.format("§a§l$ §7You need §6%d coins§7 to purchase %s§7.", item.buyPrice(), item.name().content()),
+					String.format("§a§l$ §7You only have §6%d coins§7.", coins + item.buyPrice())
 				);
 				connection.rollback();
 
@@ -106,7 +106,7 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 				return;
 			}
 
-			event.getWhoClicked().sendMessage(String.format("§a§l$ §7You purchased %s §7for §6%d coins§7.", item.name().content(), item.price()));
+			event.getWhoClicked().sendMessage(String.format("§a§l$ §7You purchased %s §7for §6%d coins§7.", item.name().content(), item.buyPrice()));
 			connection.commit();
 		} catch (SQLException e) {
 			connection.rollback();

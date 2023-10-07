@@ -1,6 +1,7 @@
 package com.deepanddeeper.deepanddeeper.game;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
 import java.sql.Connection;
@@ -31,6 +32,21 @@ public class StatisticsManager {
 		}
 
 		return result.getInt("coins");
+	}
+
+	public void addCoins(HumanEntity player, int coins) throws SQLException {
+		Connection connection = this.plugin.database.getConnection();
+
+		PreparedStatement statement = connection.prepareStatement("""
+			UPDATE "profile" SET "coins" = "coins" + ? WHERE "user" = ? AND "active" = TRUE;
+		""");
+
+		statement.setInt(1, coins);
+		statement.setObject(2, player.getUniqueId());
+
+		statement.execute();
+
+		player.sendMessage(String.format("§a§l$ §7You received §6%d coins§7.", coins));
 	}
 
 	public void addKill(Player player) throws SQLException {

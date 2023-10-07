@@ -15,8 +15,8 @@ public class Weapon extends Item {
     private double damage = 1;
     private long cooldown = 1_200;
 
-    public Weapon(DeepAndDeeper plugin, String id, int price, String name, Material material, List<String> lore) {
-        super(plugin, id, price, name, material, 1, lore);
+    public Weapon(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
+        super(plugin, id, buyPrice, sellPrice, name, material, 1, lore);
     }
 
     public Weapon damage(double damage) {
@@ -60,12 +60,13 @@ public class Weapon extends Item {
         double damage = (double) data.get("damage");
         double cooldown = (double) data.get("cooldown");
         Material material = Material.valueOf((String) data.get("material"));
-        int price = (int) data.get("price");
+        int buyPrice = (int) data.get("buy_price");
+        int sellPrice = (int) data.get("sell_price");
 
         return (switch (id) {
-            case "wizard_staff" -> new WizardStaff(plugin, id, price, name, material, lore);
-            case "wizard_spell_selector" -> new SpellSelector(plugin, id, price, name, material, lore);
-            default -> new Weapon(plugin, id, price, name, material, lore);
+            case "wizard_staff" -> new WizardStaff(plugin, id, buyPrice, sellPrice, name, material, lore);
+            case "wizard_spell_selector" -> new SpellSelector(plugin, id, buyPrice, sellPrice, name, material, lore);
+            default -> new Weapon(plugin, id, buyPrice, sellPrice, name, material, lore);
         })
             .damage(damage)
             .cooldown((long) (cooldown * 1000d));

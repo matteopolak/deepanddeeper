@@ -14,8 +14,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.List;
 
 public class WizardStaff extends Weapon {
-	public WizardStaff(DeepAndDeeper plugin, String id, int price, String name, Material material, List<String> lore) {
-		super(plugin, id, price, name, material, lore);
+	public WizardStaff(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
+		super(plugin, id, buyPrice, sellPrice, name, material, lore);
 	}
 
 	@Override

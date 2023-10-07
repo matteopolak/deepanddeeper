@@ -3,11 +3,9 @@ package com.deepanddeeper.deepanddeeper.events;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.actions.Action;
 import com.deepanddeeper.deepanddeeper.actions.JoinQueueAction;
+import com.deepanddeeper.deepanddeeper.actions.OpenSellMerchantAction;
 import com.deepanddeeper.deepanddeeper.actions.OpenStashAction;
-import com.deepanddeeper.deepanddeeper.inventories.InventoryHolderWithId;
-import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
-import com.deepanddeeper.deepanddeeper.inventories.SpellSelectorInventory;
-import com.deepanddeeper.deepanddeeper.inventories.WeaponMerchantInventory;
+import com.deepanddeeper.deepanddeeper.inventories.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -35,7 +33,8 @@ public class EntityClickListener implements Listener {
 
 		Action[] actions = {
 			new JoinQueueAction(plugin),
-			new OpenStashAction(plugin)
+			new OpenStashAction(plugin),
+			new OpenSellMerchantAction(plugin),
 		};
 
 		for (InventoryHolderWithId inventory : inventories) {
@@ -84,6 +83,12 @@ public class EntityClickListener implements Listener {
 
 		if (inventory.getHolder(false) instanceof PlayerStashInventory playerInventory) {
 			playerInventory.onInventoryClick(event);
+
+			return;
+		}
+
+		if (inventory.getHolder(false) instanceof SellMerchantInventory merchantInventory) {
+			merchantInventory.onInventoryClick(event);
 
 			return;
 		}

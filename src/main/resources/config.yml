@@ -3,155 +3,167 @@ weapons:
   - id: cool_sword
     name: §7Basic §fSword
     lore:
-      - "§8The most basic of swords."
-      - ""
-      - "§7Damage: §c50"
-      - "§7Cooldown: §b2.5s"
+      - §8The most basic of swords.
+      - ''
+      - '§7Damage: §c50'
+      - '§7Cooldown: §b2.5s'
     damage: 50.0
     cooldown: 2.5
     material: IRON_SWORD
-    price: 300
+    buy_price: 300
+    sell_price: 40
     classes:
       - warrior
   - id: epic_sword
     name: §eEpic §fSword
     lore:
-      - "§8A slightly better sword."
-      - ""
-      - "§7Damage: §c70"
-      - "§7Cooldown: §b2.4s"
+      - §8A slightly better sword.
+      - ''
+      - '§7Damage: §c70'
+      - '§7Cooldown: §b2.4s'
     damage: 70.0
     cooldown: 2.4
     material: DIAMOND_SWORD
-    price: 800
+    buy_price: 800
+    sell_price: 100
     classes:
       - warrior
-  - id: "wizard_fireball"
-    name: "§cFireball"
+  - id: wizard_fireball
+    name: §cFireball
     lore:
-      - "§8Shoots a fireball out of your fingers."
-      - ""
-      - "§7Damage: §c100"
+      - §8Shoots a fireball out of your fingers.
+      - ''
+      - '§7Damage: §c100'
     damage: 100.0
     cooldown: 4.0
-    material: "FIRE_CHARGE"
-    price: 500
+    material: FIRE_CHARGE
+    buy_price: 500
+    sell_price: 0
     classes:
       - wizard
-  - id: "wizard_lightning"
-    name: "§eLightning"
+  - id: wizard_lightning
+    name: §eLightning
     lore:
-      - "§8Summons a lightning bolt."
-      - ""
-      - "§7Damage: §c100"
+      - §8Summons a lightning bolt.
+      - ''
+      - '§7Damage: §c100'
     damage: 100.0
     cooldown: 6.0
-    material: "BLAZE_ROD"
-    price: 500
+    material: BLAZE_ROD
+    buy_price: 500
+    sell_price: 0
     classes:
       - wizard
-  - id: "wizard_haste"
-    name: "§aHaste"
+  - id: wizard_haste
+    name: §aHaste
     lore:
-      - "§8Gives you haste."
+      - §8Gives you haste.
     damage: 100.0
     cooldown: 8.0
-    material: "SUGAR"
-    price: 500
+    material: SUGAR
+    buy_price: 500
+    sell_price: 0
     classes:
       - wizard
-  - id: "wizard_invisibility"
-    name: "§bInvisibility"
+  - id: wizard_invisibility
+    name: §bInvisibility
     lore:
-      - "§8Enshrouds you in invisibility."
+      - §8Enshrouds you in invisibility.
     damage: 100.0
     cooldown: 20.0
-    material: "GOLDEN_CARROT"
-    price: 500
+    material: GOLDEN_CARROT
+    buy_price: 500
+    sell_price: 0
     classes:
       - wizard
-  - id: "wizard_staff"
-    name: "§5Wizard's Staff"
+  - id: wizard_staff
+    name: §5Wizard's Staff
     lore:
-      - "§8A wizard's staff."
+      - §8A wizard's staff.
     damage: 100.0
     cooldown: 1.5
-    material: "WOODEN_SWORD"
-    price: 500
+    material: WOODEN_SWORD
+    buy_price: 500
+    sell_price: 15
     classes:
       - wizard
-  - id: "wizard_spell_selector"
-    name: "§5Wizard's Spell Selector"
+  - id: wizard_spell_selector
+    name: §5Wizard's Spell Selector
     lore:
-      - "§8A wizard's spell selector."
+      - §8A wizard's spell selector.
     damage: 100.0
     cooldown: 0.5
-    material: "BOOK"
-    price: 500
+    material: BOOK
+    buy_price: 500
+    sell_price: 0
     classes:
       - wizard
 armor:
-  - id: "wizard_helmet"
-    name: "§5Wizard's Helmet"
+  - id: wizard_helmet
+    name: §5Wizard's Helmet
     lore:
-      - "§8A wizard's helmet."
-    material: "LEATHER_HELMET"
-    price: 100
+      - §8A wizard's helmet.
+    material: LEATHER_HELMET
+    buy_price: 100
+    sell_price: 15
     classes:
       - wizard
-  - id: "wizard_chestplate"
-    name: "§5Wizard's Chestplate"
+  - id: wizard_chestplate
+    name: §5Wizard's Chestplate
     lore:
-      - "§8A wizard's chestplate."
-    material: "LEATHER_CHESTPLATE"
-    price: 100
+      - §8A wizard's chestplate.
+    material: LEATHER_CHESTPLATE
+    buy_price: 100
+    sell_price: 15
     classes:
       - wizard
-  - id: "wizard_leggings"
-    name: "§5Wizard's Leggings"
+  - id: wizard_leggings
+    name: §5Wizard's Leggings
     lore:
-      - "§8A wizard's leggings."
-    material: "LEATHER_LEGGINGS"
-    price: 100
+      - §8A wizard's leggings.
+    material: LEATHER_LEGGINGS
+    buy_price: 100
+    sell_price: 15
     classes:
       - wizard
-  - id: "wizard_boots"
-    name: "§5Wizard's Boots"
+  - id: wizard_boots
+    name: §5Wizard's Boots
     lore:
-      - "§8A wizard's boots."
-    material: "LEATHER_BOOTS"
-    price: 100
+      - §8A wizard's boots.
+    material: LEATHER_BOOTS
+    buy_price: 100
+    sell_price: 15
     classes:
       - wizard
 enemies:
-  - id: "skeleton"
-    name: "Skeleton"
+  - id: skeleton
+    name: Skeleton
 classes:
-  - id: "warrior"
-    name: "Warrior"
+  - id: warrior
+    name: Warrior
     health: 150.0
 maps:
-  - id: "cube"
-    name: "Cube"
-    schematic: "cube.schem"
+  - id: cave1
+    name: Cave
+    schematic: cave1.schem
     spawns:
-      - x: 5.0
-        y: 0.0
-        z: 5.0
-        yaw: 135.0
+      - x: 0.5
+        y: 2.0
+        z: -23.5
+        yaw: 0.0
         pitch: 0.0
-      - x: -5.0
-        y: 0.0
-        z: 5.0
-        yaw: -135.0
+      - x: -23.5
+        y: 2.0
+        z: 0.5
+        yaw: -90.0
         pitch: 0.0
-      - x: 5.0
-        y: 0.0
-        z: -5.0
-        yaw: 45.0
+      - x: 0.5
+        y: 2.0
+        z: 24.5
+        yaw: 180.0
         pitch: 0.0
-      - x: -5.0
-        y: 0.0
-        z: -5.0
-        yaw: -45.0
+      - x: 24.5
+        y: 2.0
+        z: 0.5
+        yaw: 90.0
         pitch: 0.0

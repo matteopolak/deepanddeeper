@@ -10,8 +10,8 @@ import java.util.Map;
 public class Armor extends Item {
     private int armorRating = 1;
 
-    public Armor(DeepAndDeeper plugin, String id, int price, String name, Material material, List<String> lore) {
-        super(plugin, id, price, name, material, 1, lore);
+    public Armor(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
+        super(plugin, id, buyPrice, sellPrice, name, material, 1, lore);
     }
 
     public void armorRating(int armorRating) {
@@ -23,8 +23,9 @@ public class Armor extends Item {
         String name = (String) data.get("name");
         List<String> lore = (List<String>) data.get("lore");
         Material material = Material.valueOf((String) data.get("material"));
-        int price = (int) data.get("price");
+        int buyPrice = (int) data.get("buy_price");
+        int sellPrice = (int) data.get("sell_price");
 
-        return new Armor(plugin, id, price, name, material, lore);
+        return new Armor(plugin, id, buyPrice, sellPrice, name, material, lore);
     }
 }

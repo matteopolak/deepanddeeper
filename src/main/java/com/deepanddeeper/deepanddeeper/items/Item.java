@@ -18,18 +18,19 @@ public class Item {
     protected List<TextComponent> lore;
     protected int amount = 1;
     protected String id;
-    protected int price;
+    protected int buyPrice;
+    protected int sellPrice;
 
     protected DeepAndDeeper plugin;
 
-    public Item(DeepAndDeeper plugin, String id, int price, String name, Material material, int amount, List<String> lore) {
+    public Item(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, int amount, List<String> lore) {
         this.plugin = plugin;
         this.id = id;
-        this.price = price;
         this.name = Component.text(name);
         this.material = material;
         this.amount = amount;
-
+        this.buyPrice = buyPrice;
+        this.sellPrice = sellPrice;
         this.lore = lore
           .stream()
           .map(l -> l == null ? Component.text("") : Component.text(l))
@@ -74,7 +75,11 @@ public class Item {
         return this.id;
     }
 
-    public int price() {
-        return this.price;
+    public int buyPrice() {
+        return this.buyPrice;
+    }
+
+    public int sellPrice() {
+        return this.sellPrice;
     }
 }
