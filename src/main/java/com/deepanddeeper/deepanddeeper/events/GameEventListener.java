@@ -12,6 +12,9 @@ import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
 
 import java.sql.SQLException;
 
@@ -48,25 +51,39 @@ public class GameEventListener implements Listener {
 	}
 
 	@EventHandler
-	public void onFoodLevelChange(FoodLevelChangeEvent event) {
-		if (event.getEntity() instanceof Player player) {
-			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+	public void onInventoryClick(InventoryClickEvent event) {
+		if (event.getWhoClicked() instanceof Player player) {
+			GameClass gameClass = this.plugin.classManager.classes.get(player.getUniqueId());
+			Inventory inventory = event.getClickedInventory();
 
-			if (game != null && !game.hasEnded() && player.getWorld() == game.getWorld()) {
+			// disable modifying the hotbar when a class is equipped
+			if (gameClass != null && inventory != null && inventory.getType() == InventoryType.PLAYER && !gameClass.canModifySlot(event.getSlot())) {
 				event.setCancelled(true);
 			}
 		}
 	}
 
 	@EventHandler
-	public void onInventoryClick(InventoryClickEvent event) {
-		if (event.getWhoClicked() instanceof Player player) {
-			GameClass gameClass = this.plugin.classManager.classes.get(player.getUniqueId());
+	public void onPlayerDropItem(PlayerDropItemEvent event) {
+		Player player = event.getPlayer();
+		GameClass gameClass = this.plugin.classManager.classes.get(player.getUniqueId());
+		int slot = player.getInventory().getHeldItemSlot();
 
-			// disable modifying the hotbar when a class is equipped
-			if (gameClass != null && event.getClickedInventory().getType() == InventoryType.PLAYER && event.getSlot() < 9) {
-				event.setCancelled(true);
-			}
+		if (gameClass != null && !gameClass.canModifySlot(slot)) {
+			event.setCancelled(true);
+		}
+	}
+
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) throws SQLException {
+		Player player = event.getPlayer();
+		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+
+		if (game != null) {
+			player.setHealth(0);
+
+			game.sendMessage(String.format("§c§l> §f%s §7has left the game!", player.getName()));
+			game.removePlayer(player);
 		}
 	}
 }

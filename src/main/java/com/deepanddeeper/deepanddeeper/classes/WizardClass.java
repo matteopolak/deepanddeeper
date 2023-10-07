@@ -11,16 +11,15 @@ import org.bukkit.inventory.PlayerInventory;
 
 public class WizardClass extends GameClass {
 	private ItemStack[] defaultItems;
+	private WizardSpell spell;
 
 	public WizardClass(DeepAndDeeper plugin) {
 		super(plugin);
 
 		ItemStack[] defaultItems = new ItemStack[41];
 
-		defaultItems[6] = this.plugin.itemManager.item("wizard_fireball").item();
-		defaultItems[5] = this.plugin.itemManager.item("wizard_lightning").item();
-		defaultItems[4] = this.plugin.itemManager.item("wizard_invisibility").item();
-		defaultItems[3] = this.plugin.itemManager.item("wizard_haste").item();
+		defaultItems[0] = this.plugin.itemManager.item("wizard_staff").item();
+		defaultItems[8] = this.plugin.itemManager.item("wizard_spell_selector").item();
 
 		// set the armour to all purple leather
 		defaultItems[39] = this.plugin.itemManager.item("wizard_helmet").item();
@@ -36,7 +35,7 @@ public class WizardClass extends GameClass {
 		player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
 			.setBaseValue(16);
 
-		if (!this.readInventory(player, GameClassType.WIZARD)) {
+		if (!this.readInventory(player, this.type())) {
 			player.getInventory().setContents(this.defaultItems);
 		}
 
@@ -68,5 +67,25 @@ public class WizardClass extends GameClass {
 		// remove slowness without using a potion effect
 		player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
 			.setBaseValue(0.2);
+	}
+
+	@Override
+	public boolean canModifySlot(int slot) {
+		// Do not allow the player to modify the last slot,
+		// since it is used to select a spell.
+		return slot != 8;
+	}
+
+	public void spell(WizardSpell spell) {
+		this.spell = spell;
+	}
+
+	public WizardSpell spell() {
+		return this.spell;
+	}
+
+	@Override
+	public GameClassType type() {
+		return GameClassType.WIZARD;
 	}
 }

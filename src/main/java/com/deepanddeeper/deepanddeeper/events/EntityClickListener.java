@@ -6,6 +6,7 @@ import com.deepanddeeper.deepanddeeper.actions.JoinQueueAction;
 import com.deepanddeeper.deepanddeeper.actions.OpenStashAction;
 import com.deepanddeeper.deepanddeeper.inventories.InventoryHolderWithId;
 import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
+import com.deepanddeeper.deepanddeeper.inventories.SpellSelectorInventory;
 import com.deepanddeeper.deepanddeeper.inventories.WeaponMerchantInventory;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -83,6 +84,12 @@ public class EntityClickListener implements Listener {
 
 		if (inventory.getHolder(false) instanceof PlayerStashInventory playerInventory) {
 			playerInventory.onInventoryClick(event);
+
+			return;
+		}
+
+		if (inventory.getHolder(false) instanceof SpellSelectorInventory spellSelectorInventory) {
+			spellSelectorInventory.onInventoryClick(event);
 
 			return;
 		}

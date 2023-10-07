@@ -3,6 +3,8 @@ package com.deepanddeeper.deepanddeeper.items;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +34,15 @@ public class ItemManager {
 
 	public Item item(String id) {
 		return this.items.get(id);
+	}
+
+	public Item item(ItemStack item) {
+		if (item == null) return null;
+
+		String itemId = item.getItemMeta().getPersistentDataContainer().get(this.idKey, PersistentDataType.STRING);
+		if (itemId == null) return null;
+
+		return this.item(itemId);
 	}
 
 	public long remainingCooldown(Player player, Weapon weapon) {

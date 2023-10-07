@@ -43,8 +43,13 @@ public class ClassCommand implements CommandWithName {
 				return true;
 			}
 
-			this.plugin.classManager.switchClass(player, classType);
-			player.sendMessage(String.format("§e§l> §7You have switched to the %s §7class.", classType.colouredName()));
+			boolean successful = this.plugin.classManager.switchClass(player, classType);
+
+			if (successful) {
+				player.sendMessage(String.format("§e§l> §7You have switched to the %s §7class.", classType.colouredName()));
+			} else {
+				player.sendMessage(String.format("§c§l> §7You are already using the %s §7class.", classType.colouredName()));
+			}
 		}
 
 		return true;

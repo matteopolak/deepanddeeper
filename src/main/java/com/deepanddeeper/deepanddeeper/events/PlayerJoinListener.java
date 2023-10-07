@@ -4,6 +4,7 @@ import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +31,9 @@ public class PlayerJoinListener implements Listener {
 
 		// Teleport the player to the lobby
 		player.teleport(new Location(Bukkit.getWorld("world"), 0.5, 0, 0.5, 0, 0));
+
+		player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+		player.setFoodLevel(20);
 
 		// Remove the player from the "playing" team when they join
 		boolean wasInGame = this.plugin.playingTeam.removePlayer(player);

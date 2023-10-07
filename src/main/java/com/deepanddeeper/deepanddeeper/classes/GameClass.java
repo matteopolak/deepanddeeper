@@ -35,6 +35,16 @@ public abstract class GameClass {
 	 */
 	public abstract void onDeactivate(Player player);
 
+	/**
+	 * Fired when the player clicks in their inventory.
+	 *
+	 * @param slot The slot that was clicked
+	 * @return `false` if the event should be canceled
+	 */
+	public abstract boolean canModifySlot(int slot);
+
+	public abstract GameClassType type();
+
 	protected boolean saveInventory(Player player, GameClassType type) {
 		String filename = type.filename();
 
@@ -58,6 +68,7 @@ public abstract class GameClass {
 		return true;
 	}
 
+	// Reads the specified inventory then deletes it from disk
 	protected boolean readInventory(Player player, GameClassType type) {
 		String filename = type.filename();
 
@@ -70,6 +81,9 @@ public abstract class GameClass {
 		try {
 			// read encoded string from file
 			String encoded = Files.readString(path);
+
+			// delete file
+			Files.delete(path);
 
 			// decode string to inventory
 			player.getInventory().setContents(InventoryToBase64.fromBase64(encoded));

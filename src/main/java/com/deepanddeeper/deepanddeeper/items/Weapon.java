@@ -1,12 +1,10 @@
 package com.deepanddeeper.deepanddeeper.items;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.items.weapons.Fireball;
-import com.deepanddeeper.deepanddeeper.items.weapons.Haste;
-import com.deepanddeeper.deepanddeeper.items.weapons.Invisibility;
-import com.deepanddeeper.deepanddeeper.items.weapons.Lightning;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
+import com.deepanddeeper.deepanddeeper.items.weapons.SpellSelector;
+import com.deepanddeeper.deepanddeeper.items.weapons.WizardStaff;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -35,8 +33,8 @@ public class Weapon extends Item {
         return this.cooldown;
     }
 
-    public void onHit() {
-        //Do something
+    public void onHit(EntityDamageByEntityEvent event, Player attacker, Player victim) {
+        event.setDamage(this.damage);
     }
 
     public boolean canActivate() {
@@ -65,10 +63,8 @@ public class Weapon extends Item {
         int price = (int) data.get("price");
 
         return (switch (id) {
-            case "wizard_fireball" -> new Fireball(plugin, id, price, name, material, lore);
-            case "wizard_lightning" -> new Lightning(plugin, id, price, name, material, lore);
-            case "wizard_haste" -> new Haste(plugin, id, price, name, material, lore);
-            case "wizard_invisibility" -> new Invisibility(plugin, id, price, name, material, lore);
+            case "wizard_staff" -> new WizardStaff(plugin, id, price, name, material, lore);
+            case "wizard_spell_selector" -> new SpellSelector(plugin, id, price, name, material, lore);
             default -> new Weapon(plugin, id, price, name, material, lore);
         })
             .damage(damage)

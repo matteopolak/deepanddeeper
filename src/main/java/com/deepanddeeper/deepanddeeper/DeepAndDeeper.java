@@ -52,6 +52,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 			new EntityClickListener(this),
 			new GameEventListener(this),
 			new ClassEventListener(this),
+			new GeneralEventListener(),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();

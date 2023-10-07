@@ -45,6 +45,10 @@ public class Item {
           .getPersistentDataContainer()
           .set(plugin.itemManager.idKey, PersistentDataType.STRING, this.id());
 
+        if (this.item.getType().getMaxDurability() > 0) {
+            meta.setUnbreakable(true);
+        }
+
         this.item.setItemMeta(meta);
     }
 

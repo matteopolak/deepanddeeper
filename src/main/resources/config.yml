@@ -30,6 +30,8 @@ weapons:
     name: "§cFireball"
     lore:
       - "§8Shoots a fireball out of your fingers."
+      - ""
+      - "§7Damage: §c100"
     damage: 100.0
     cooldown: 4.0
     material: "FIRE_CHARGE"
@@ -42,7 +44,6 @@ weapons:
       - "§8Summons a lightning bolt."
       - ""
       - "§7Damage: §c100"
-      - "§7Cooldown: §b6s"
     damage: 100.0
     cooldown: 6.0
     material: "BLAZE_ROD"
@@ -53,8 +54,6 @@ weapons:
     name: "§aHaste"
     lore:
       - "§8Gives you haste."
-      - ""
-      - "§7Cooldown: §b8s"
     damage: 100.0
     cooldown: 8.0
     material: "SUGAR"
@@ -65,11 +64,29 @@ weapons:
     name: "§bInvisibility"
     lore:
       - "§8Enshrouds you in invisibility."
-      - ""
-      - "§7Cooldown: §b10s"
     damage: 100.0
     cooldown: 20.0
     material: "GOLDEN_CARROT"
+    price: 500
+    classes:
+      - wizard
+  - id: "wizard_staff"
+    name: "§5Wizard's Staff"
+    lore:
+      - "§8A wizard's staff."
+    damage: 100.0
+    cooldown: 1.5
+    material: "WOODEN_SWORD"
+    price: 500
+    classes:
+      - wizard
+  - id: "wizard_spell_selector"
+    name: "§5Wizard's Spell Selector"
+    lore:
+      - "§8A wizard's spell selector."
+    damage: 100.0
+    cooldown: 0.5
+    material: "BOOK"
     price: 500
     classes:
       - wizard

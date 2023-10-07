@@ -5,6 +5,8 @@ import com.deepanddeeper.deepanddeeper.map.Map;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +79,14 @@ public class Game extends BukkitRunnable {
 		this.runTaskTimer(this.plugin, 20, 20);
 	}
 
+	private void clearDroppedItems() {
+		for (Entity entity : this.world.getEntities()) {
+			if (entity instanceof Item item) {
+				item.remove();
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		if (this.state == GameState.STARTING) {
@@ -90,6 +100,8 @@ public class Game extends BukkitRunnable {
 			} else if (this.countdown == 0) {
 				this.sendActionBar(Component.text("§fGame starting..."));
 				this.countdown--;
+
+				this.clearDroppedItems();
 
 				var borders = this.map.borders();
 				var firstBorder = borders.get(0);
@@ -157,7 +169,9 @@ public class Game extends BukkitRunnable {
 	}
 
 	public void removePlayer(Player player) throws SQLException {
-		this.livingPlayers.remove(player);
+		// If no players are left, then the last one to die is the winner
+		if (this.livingPlayers.size() > 1)
+			this.livingPlayers.remove(player);
 
 		Player reference = null;
 

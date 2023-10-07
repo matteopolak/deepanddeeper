@@ -32,8 +32,16 @@ public class ClassManager {
 		}
 	}
 
-	public void switchClass(Player player, GameClassType type) {
+	public boolean switchClass(Player player, GameClassType type) {
+		GameClass gameClass = this.classes.get(player.getUniqueId());
+
+		if (gameClass != null && gameClass.type() == type) {
+			return false;
+		}
+
 		this.deactivateClass(player);
 		this.activateClass(player, type);
+
+		return true;
 	}
 }
