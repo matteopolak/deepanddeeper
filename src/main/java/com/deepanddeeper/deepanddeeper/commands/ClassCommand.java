@@ -2,7 +2,6 @@ package com.deepanddeeper.deepanddeeper.commands;
 
 import com.deepanddeeper.deepanddeeper.CommandWithName;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.classes.GameClass;
 import com.deepanddeeper.deepanddeeper.classes.GameClassType;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;

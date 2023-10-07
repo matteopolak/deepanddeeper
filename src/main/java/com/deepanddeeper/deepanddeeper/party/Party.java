@@ -8,93 +8,90 @@ import java.util.Iterator;
 
 public class Party {
 
-    public static final int MAX_PARTY_SIZE = 3;
+	public static final int MAX_PARTY_SIZE = 3;
+	public HashSet<Player> members = new HashSet<>();
+	private Player leader;
+	private HashSet<Player> invites = new HashSet<>();
 
-    private Player leader;
+	public Party(Player leader) {
+		this.leader = leader;
+		this.add(leader);
+	}
 
-    public HashSet<Player> members = new HashSet<>();
+	public boolean add(Player p) {
+		if (this.members.size() >= MAX_PARTY_SIZE) {
+			p.sendMessage(String.format("§b§l> §7You cannot join §f%s§7's party because it is full.", this.leader.getName()));
 
-    private HashSet<Player> invites = new HashSet<>();
+			return false;
+		}
 
-    public Party(Player leader) {
-        this.leader = leader;
-        this.add(leader);
-    }
+		if (p != this.getLeader()) {
+			p.sendMessage(String.format("§b§l> §7You have joined §f%s§7's party.", this.leader.getName()));
+			this.sendMessage(String.format("§b§l> §f%s §7has joined the party.", p.getName()));
+		}
 
-    public boolean add(Player p) {
-        if (this.members.size() >= MAX_PARTY_SIZE) {
-            p.sendMessage(String.format("§b§l> §7You cannot join §f%s§7's party because it is full.", this.leader.getName()));
+		this.members.add(p);
+		this.invites.remove(p);
 
-            return false;
-        }
+		return true;
+	}
 
-        if (p != this.getLeader()) {
-            p.sendMessage(String.format("§b§l> §7You have joined §f%s§7's party.", this.leader.getName()));
-            this.sendMessage(String.format("§b§l> §f%s §7has joined the party.", p.getName()));
-        }
+	public boolean remove(Player p) {
+		if (p == this.leader) {
+			if (this.members.size() > 1) {
+				Iterator<Player> it = this.members.iterator();
 
-        this.members.add(p);
-        this.invites.remove(p);
+				this.leader = it.next();
+				this.members.remove(p);
 
-        return true;
-    }
+				p.sendMessage(String.format("§b§l> §7You have left the party; leader has been transferred to §f%s§7.", this.leader.getName()));
+				this.sendMessage(String.format("§b§l> §f%s §7has left the party; leader has been transferred to §f%s§7.", p.getName(), this.leader.getName()));
 
-    public boolean remove(Player p) {
-        if (p == this.leader) {
-            if (this.members.size() > 1) {
-                Iterator<Player> it = this.members.iterator();
+				return true;
+			} else {
+				return false;
+			}
+		}
 
-                this.leader = it.next();
-                this.members.remove(p);
+		boolean removed = this.members.remove(p);
 
-                p.sendMessage(String.format("§b§l> §7You have left the party; leader has been transferred to §f%s§7.", this.leader.getName()));
-                this.sendMessage(String.format("§b§l> §f%s §7has left the party; leader has been transferred to §f%s§7.", p.getName(), this.leader.getName()));
+		if (removed) {
+			p.sendMessage("§b§l> §7You have left the party.");
+			this.sendMessage(String.format("§b§l> §f%s §7has left the party.", p.getName()));
+		}
 
-                return true;
-            } else {
-                return false;
-            }
-        }
+		return removed;
+	}
 
-        boolean removed = this.members.remove(p);
+	public Iterable<Player> getMembers() {
+		return this.members;
+	}
 
-        if (removed) {
-            p.sendMessage("§b§l> §7You have left the party.");
-            this.sendMessage(String.format("§b§l> §f%s §7has left the party.", p.getName()));
-        }
+	public Player getLeader() {
+		return this.leader;
+	}
 
-        return removed;
-    }
+	public void sendMessage(String message) {
+		for (Player member : this.members) {
+			member.sendMessage(message);
+		}
+	}
 
-    public Iterable<Player> getMembers() {
-        return this.members;
-    }
+	public void sendActionBar(Component message) {
+		for (Player member : this.members) {
+			member.sendActionBar(message);
+		}
+	}
 
-    public Player getLeader() {
-        return this.leader;
-    }
+	public void invite(Player player) {
+		this.invites.add(player);
+	}
 
-    public void sendMessage(String message) {
-        for (Player member : this.members) {
-            member.sendMessage(message);
-        }
-    }
+	public boolean hasInvite(Player player) {
+		return this.invites.contains(player);
+	}
 
-    public void sendActionBar(Component message) {
-        for (Player member : this.members) {
-            member.sendActionBar(message);
-        }
-    }
-
-    public void invite(Player player) {
-        this.invites.add(player);
-    }
-
-    public boolean hasInvite(Player player) {
-        return this.invites.contains(player);
-    }
-
-    public boolean isFull() {
-        return this.members.size() == MAX_PARTY_SIZE;
-    }
+	public boolean isFull() {
+		return this.members.size() == MAX_PARTY_SIZE;
+	}
 }

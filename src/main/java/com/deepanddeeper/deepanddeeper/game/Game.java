@@ -117,6 +117,7 @@ public class Game extends BukkitRunnable {
 						border.setDamageBuffer(0);
 						border.setWarningDistance(2);
 						border.setWarningTime(5);
+						border.setCenter(0.5, 0.5);
 						border.setSize(secondBorder.first, secondBorder.second);
 
 						this.borderIndex = 2;

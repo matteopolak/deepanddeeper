@@ -9,6 +9,17 @@ public enum GameClassType {
 	BARBARIAN,
 	FIGHTER;
 
+	public static GameClassType from(String string) {
+		return switch (string) {
+			case "wizard" -> WIZARD;
+			case "ranger" -> RANGER;
+			case "rogue" -> ROGUE;
+			case "barbarian" -> BARBARIAN;
+			case "fighter" -> FIGHTER;
+			default -> null;
+		};
+	}
+
 	public String filename() {
 		return switch (this) {
 			case WIZARD -> "wizard";
@@ -32,17 +43,6 @@ public enum GameClassType {
 	public GameClass getGameClass(DeepAndDeeper plugin) {
 		return switch (this) {
 			case WIZARD -> new WizardClass(plugin);
-			default -> null;
-		};
-	}
-
-	public static GameClassType from(String string) {
-		return switch (string) {
-			case "wizard" -> WIZARD;
-			case "ranger" -> RANGER;
-			case "rogue" -> ROGUE;
-			case "barbarian" -> BARBARIAN;
-			case "fighter" -> FIGHTER;
 			default -> null;
 		};
 	}

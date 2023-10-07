@@ -12,14 +12,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class PlayerJoinListener implements Listener {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public PlayerJoinListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -47,11 +46,11 @@ public class PlayerJoinListener implements Listener {
 
 		try (
 			PreparedStatement insertUser = connection.prepareStatement("""
-				INSERT INTO "user" ("uuid") VALUES (?);
-			""");
+					INSERT INTO "user" ("uuid") VALUES (?);
+				""");
 			PreparedStatement insertProfile = connection.prepareStatement("""
-				INSERT INTO "profile" ("user", "active") VALUES (?, TRUE);
-			""");
+					INSERT INTO "profile" ("user", "active") VALUES (?, TRUE);
+				""");
 		) {
 			player.sendMessage("§b§l> §7Checking if you have a profile...");
 

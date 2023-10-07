@@ -3,17 +3,14 @@ package com.deepanddeeper.deepanddeeper.game;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.map.Map;
 import com.deepanddeeper.deepanddeeper.party.Party;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.*;
 
 public class GameManager {
-	private static int totalGames = 0;
 	public static List<Integer> freeGameIds = new ArrayList<>();
-
+	private static int totalGames = 0;
 	public Queue queue;
 	public java.util.Map<UUID, Game> games = new HashMap<>();
 

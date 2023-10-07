@@ -19,8 +19,8 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class PlayerStashInventory implements InventoryHolder {
-	private Inventory inventory;
-	private DeepAndDeeper plugin;
+	private final Inventory inventory;
+	private final DeepAndDeeper plugin;
 	private int profileId;
 
 	public PlayerStashInventory(DeepAndDeeper plugin, UUID playerId) {
@@ -31,12 +31,12 @@ public class PlayerStashInventory implements InventoryHolder {
 
 		try (
 			PreparedStatement getProfileIdStatement = this.plugin.database.getConnection().prepareStatement("""
-				SELECT "id" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
-			""");
+					SELECT "id" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
+				""");
 			PreparedStatement getItemsStatement = connection.prepareStatement("""
-				SELECT "item_id", "slot" FROM "stash" WHERE "profile_id" = ? ORDER BY "slot" ASC;
-			""");
-			) {
+					SELECT "item_id", "slot" FROM "stash" WHERE "profile_id" = ? ORDER BY "slot" ASC;
+				""");
+		) {
 			getProfileIdStatement.setObject(1, playerId);
 
 			var profileIdResultSet = getProfileIdStatement.executeQuery();
@@ -69,10 +69,10 @@ public class PlayerStashInventory implements InventoryHolder {
 
 		try (
 			PreparedStatement addItemStatement = connection.prepareStatement("""
-				INSERT INTO "stash" ("profile_id", "item_id", "slot") VALUES (?, ?, ?)
-					ON CONFLICT ("profile_id", "slot") DO UPDATE SET "item_id" = excluded."item_id";
-			""");
-			) {
+					INSERT INTO "stash" ("profile_id", "item_id", "slot") VALUES (?, ?, ?)
+						ON CONFLICT ("profile_id", "slot") DO UPDATE SET "item_id" = excluded."item_id";
+				""");
+		) {
 			ItemStack item = this.plugin.itemManager.item(itemId).item();
 
 			addItemStatement.setInt(1, this.profileId);
@@ -90,9 +90,9 @@ public class PlayerStashInventory implements InventoryHolder {
 
 		try (
 			PreparedStatement removeItemStatement = connection.prepareStatement("""
-				DELETE FROM "stash" WHERE "profile_id" = ? AND "slot" = ?;
-			""");
-			) {
+					DELETE FROM "stash" WHERE "profile_id" = ? AND "slot" = ?;
+				""");
+		) {
 			removeItemStatement.setInt(1, this.profileId);
 			removeItemStatement.setInt(2, slot);
 

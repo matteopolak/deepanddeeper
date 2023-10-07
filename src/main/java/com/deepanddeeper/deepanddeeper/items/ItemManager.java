@@ -11,11 +11,9 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ItemManager {
-	private DeepAndDeeper plugin;
-
 	public NamespacedKey idKey;
 	public Map<String, Item> items;
-
+	private DeepAndDeeper plugin;
 	private Map<UUID, Map<String, Long>> cooldowns = new HashMap<>();
 
 	public ItemManager(DeepAndDeeper plugin) {

@@ -8,5 +8,6 @@ import java.util.UUID;
 
 public interface InventoryHolderWithId extends InventoryHolder {
 	public UUID id();
+
 	public void onInventoryClick(InventoryClickEvent event) throws SQLException;
 }

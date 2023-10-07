@@ -20,8 +20,8 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			SELECT "coins" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
-		""");
+				SELECT "coins" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
+			""");
 
 		statement.setObject(1, player.getUniqueId());
 
@@ -38,8 +38,8 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "coins" = "coins" + ? WHERE "user" = ? AND "active" = TRUE;
-		""");
+				UPDATE "profile" SET "coins" = "coins" + ? WHERE "user" = ? AND "active" = TRUE;
+			""");
 
 		statement.setInt(1, coins);
 		statement.setObject(2, player.getUniqueId());
@@ -53,8 +53,8 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "kills" = "kills" + 1 WHERE "user" = ? AND "active" = TRUE;
-		""");
+				UPDATE "profile" SET "kills" = "kills" + 1 WHERE "user" = ? AND "active" = TRUE;
+			""");
 
 		statement.setObject(1, player.getUniqueId());
 		statement.executeUpdate();
@@ -64,8 +64,8 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "deaths" = "deaths" + 1 WHERE "user" = ? AND "active" = TRUE;
-		""");
+				UPDATE "profile" SET "deaths" = "deaths" + 1 WHERE "user" = ? AND "active" = TRUE;
+			""");
 
 		statement.setObject(1, player.getUniqueId());
 		statement.executeUpdate();
@@ -75,8 +75,8 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "wins" = "wins" + 1 WHERE "user" = ? AND "active" = TRUE;
-		""");
+				UPDATE "profile" SET "wins" = "wins" + 1 WHERE "user" = ? AND "active" = TRUE;
+			""");
 
 		statement.setObject(1, player.getUniqueId());
 		statement.executeUpdate();
@@ -86,8 +86,8 @@ public class StatisticsManager {
 		Connection connection = this.plugin.database.getConnection();
 
 		PreparedStatement statement = connection.prepareStatement("""
-			UPDATE "profile" SET "losses" = "losses" + 1 WHERE "user" = ? AND "active" = TRUE;
-		""");
+				UPDATE "profile" SET "losses" = "losses" + 1 WHERE "user" = ? AND "active" = TRUE;
+			""");
 
 		statement.setObject(1, player.getUniqueId());
 		statement.executeUpdate();

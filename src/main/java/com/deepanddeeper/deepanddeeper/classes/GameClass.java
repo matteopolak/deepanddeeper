@@ -2,13 +2,9 @@ package com.deepanddeeper.deepanddeeper.classes;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.util.InventoryToBase64;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;

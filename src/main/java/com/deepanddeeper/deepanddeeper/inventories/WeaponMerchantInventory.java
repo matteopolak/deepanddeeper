@@ -4,7 +4,6 @@ import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.items.Item;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -15,13 +14,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class WeaponMerchantInventory implements InventoryHolderWithId {
-	private Inventory inventory;
-	private DeepAndDeeper plugin;
+	private final Inventory inventory;
+	private final DeepAndDeeper plugin;
 
 	public WeaponMerchantInventory(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -71,8 +69,8 @@ public class WeaponMerchantInventory implements InventoryHolderWithId {
 
 		try (
 			PreparedStatement statement = connection.prepareStatement("""
-				UPDATE "profile" SET "coins" = "coins" - ? WHERE "user" = ? AND "active" = TRUE RETURNING "coins";
-			""")) {
+					UPDATE "profile" SET "coins" = "coins" - ? WHERE "user" = ? AND "active" = TRUE RETURNING "coins";
+				""")) {
 			connection.setAutoCommit(false);
 
 			statement.setInt(1, item.buyPrice());

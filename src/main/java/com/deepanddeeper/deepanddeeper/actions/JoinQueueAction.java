@@ -1,15 +1,11 @@
 package com.deepanddeeper.deepanddeeper.actions;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.game.Game;
-import com.deepanddeeper.deepanddeeper.game.Queue;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class JoinQueueAction implements Action {

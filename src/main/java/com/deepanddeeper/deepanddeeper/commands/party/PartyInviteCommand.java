@@ -11,54 +11,54 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PartyInviteCommand implements CommandWithName {
-    private DeepAndDeeper plugin;
+	private DeepAndDeeper plugin;
 
-    public PartyInviteCommand(DeepAndDeeper plugin) {
-        this.plugin = plugin;
-    }
+	public PartyInviteCommand(DeepAndDeeper plugin) {
+		this.plugin = plugin;
+	}
 
-    public String commandName() {
-        return "invite";
-    }
+	public String commandName() {
+		return "invite";
+	}
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        if(sender instanceof Player player) {
+		if (sender instanceof Player player) {
 
-            Party party = this.plugin.partyManager.getParty(player);
+			Party party = this.plugin.partyManager.getParty(player);
 
-            if(party.getLeader() != player) {
-                player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
-                return false;
-            }
+			if (party.getLeader() != player) {
+				player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
+				return false;
+			}
 
-            Game game = this.plugin.gameManager.games.get(player.getUniqueId());
-            if(game != null && !game.hasEnded()) {
-                player.sendMessage("§c§l> §7You cannot invite a player during a game!");
-                return false;
-            }
+			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+			if (game != null && !game.hasEnded()) {
+				player.sendMessage("§c§l> §7You cannot invite a player during a game!");
+				return false;
+			}
 
-            if(party.isFull()) {
-                player.sendMessage("§c§l> §7Your party is full.");
-                return false;
-            }
+			if (party.isFull()) {
+				player.sendMessage("§c§l> §7Your party is full.");
+				return false;
+			}
 
-            for(String s : args) {
-                Player playerToInvite = Bukkit.getPlayerExact(s);
+			for (String s : args) {
+				Player playerToInvite = Bukkit.getPlayerExact(s);
 
-                if(playerToInvite != null) {
-                    playerToInvite.sendMessage(String.format("§b§l> §7You are being invited by §f%s§7, type §f/accept§7 to join their party!", player.getName()));
-                    party.sendMessage(String.format("§b§l> §f%s §7has been invited to your party!", playerToInvite.getName()));
-                    party.invite(playerToInvite);
-                } else {
-                    player.sendMessage(String.format("§b§l> §f%s §7could not be found.", s));
-                }
+				if (playerToInvite != null) {
+					playerToInvite.sendMessage(String.format("§b§l> §7You are being invited by §f%s§7, type §f/accept§7 to join their party!", player.getName()));
+					party.sendMessage(String.format("§b§l> §f%s §7has been invited to your party!", playerToInvite.getName()));
+					party.invite(playerToInvite);
+				} else {
+					player.sendMessage(String.format("§b§l> §f%s §7could not be found.", s));
+				}
 
-            }
+			}
 
-        }
+		}
 
-        return true;
-    }
+		return true;
+	}
 }

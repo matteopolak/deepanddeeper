@@ -3,15 +3,15 @@ package com.deepanddeeper.deepanddeeper.events;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.classes.GameClass;
 import com.deepanddeeper.deepanddeeper.game.Game;
-import com.deepanddeeper.deepanddeeper.party.Party;
+import com.destroystokyo.paper.ParticleBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -25,7 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.sql.SQLException;
 
 public class GameEventListener implements Listener {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public GameEventListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -68,7 +68,7 @@ public class GameEventListener implements Listener {
 			PotionEffect effect = switch (block.getType()) {
 				case LIME_WOOL -> new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20 * 10, 0);
 				case LIGHT_BLUE_WOOL -> new PotionEffect(PotionEffectType.SPEED, 20 * 10, 0);
-				case RED_WOOL	-> new PotionEffect(PotionEffectType.REGENERATION, 1, 9);
+				case RED_WOOL -> new PotionEffect(PotionEffectType.REGENERATION, 1, 9);
 				case ORANGE_WOOL -> new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20 * 10, 0);
 				default -> null;
 			};
@@ -78,10 +78,28 @@ public class GameEventListener implements Listener {
 
 				Material material = block.getType();
 
+				// spawn a bunch of particles with the same colour as the wool on the block
+				ParticleBuilder particleBuilder = new ParticleBuilder(Particle.REDSTONE)
+					.location(block.getLocation().add(0.5, 0.5, 0.5))
+					.count(100)
+					.offset(0.5, 0.5, 0.5)
+					.extra(2)
+					.allPlayers();
+
+				// use the RGB values of the wool to set the particle colour
+				switch (material) {
+					case LIME_WOOL -> particleBuilder.color(57, 186, 46);
+					case LIGHT_BLUE_WOOL -> particleBuilder.color(99, 135, 210);
+					case RED_WOOL -> particleBuilder.color(158, 43, 39);
+					case ORANGE_WOOL -> particleBuilder.color(234, 126, 53);
+				}
+
+				particleBuilder.spawn();
+
 				// set the block to gray wool, then back to the original material
 				// after 30 seconds
 				block.setType(Material.GRAY_WOOL);
-				
+
 				Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
 					block.setType(material);
 				}, 20 * 30);

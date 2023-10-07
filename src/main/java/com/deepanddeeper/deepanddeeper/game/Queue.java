@@ -34,6 +34,7 @@ public class Queue {
 
 	/**
 	 * Removes a party from the queue.
+	 *
 	 * @param party
 	 * @return `true` if the party was in the queue beforehand
 	 */

@@ -40,20 +40,35 @@ public class Map {
 		Bukkit.getLogger().info("Successfully loaded map " + this.file.exists());
 	}
 
+	public static @NotNull Map deserialize(java.util.Map<String, Object> data) {
+		String id = (String) data.get("id");
+		String name = (String) data.get("name");
+		String schematic = (String) data.get("schematic");
+
+		List<Spawn> spawns = ((List<java.util.Map<String, Object>>) data.get("spawns")).stream()
+			.map(Spawn::deserialize)
+			.toList();
+
+		return new Map(schematic)
+			.id(id)
+			.name(name)
+			.spawns(spawns);
+	}
+
 	/**
 	 * Returns a list of pairs of the form (x, z) where x is the side-length of the border,
 	 * and z is the time in seconds at which the border should shrink to that size.
-	 *
+	 * <p>
 	 * Note that the first pair is reached instantly, regardless of the delay.
 	 */
 	public List<Pair<Double, Long>> borders() {
 		return List.of(
 			Pair.of(100d * 2 + 1, 0L),
-			Pair.of(50d * 2 + 1, 60L),
-			Pair.of(25d * 2 + 1, 120L),
-			Pair.of(12.5d * 2 + 1, 180L),
-			Pair.of(6.25d * 2 + 1, 240L),
-			Pair.of(0d, 300L)
+			Pair.of(50d * 2 + 1, 30L),
+			Pair.of(25d * 2 + 1, 45L),
+			Pair.of(12.5d * 2 + 1, 60L),
+			Pair.of(6.25d * 2 + 1, 90L),
+			Pair.of(0d, 120L)
 		);
 	}
 
@@ -74,21 +89,6 @@ public class Map {
 	public Map name(String name) {
 		this.name = name;
 		return this;
-	}
-
-	public static @NotNull Map deserialize(java.util.Map<String, Object> data) {
-		String id = (String) data.get("id");
-		String name = (String) data.get("name");
-		String schematic = (String) data.get("schematic");
-
-		List<Spawn> spawns = ((List<java.util.Map<String, Object>>) data.get("spawns")).stream()
-			.map(Spawn::deserialize)
-			.toList();
-
-		return new Map(schematic)
-			.id(id)
-			.name(name)
-			.spawns(spawns);
 	}
 
 	private void deleteWorld(String worldName) throws IOException {

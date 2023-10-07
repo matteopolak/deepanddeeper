@@ -3,10 +3,11 @@ package com.deepanddeeper.deepanddeeper.inventories;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.items.Item;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
+import net.kyori.adventure.translation.TranslationRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -17,8 +18,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -26,9 +25,9 @@ public class SellMerchantInventory implements InventoryHolder {
 	// itemstack with a name and lore, gold ingot material
 	private static final int SELL_ITEM_SLOT = 49;
 
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 	private int value = 0;
-	private Inventory inventory;
+	private final Inventory inventory;
 
 	public SellMerchantInventory(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -87,7 +86,8 @@ public class SellMerchantInventory implements InventoryHolder {
 	public void onInventoryClick(InventoryClickEvent event) throws SQLException {
 		if (event.getSlot() == SELL_ITEM_SLOT) {
 			event.setCancelled(true);
-			this.sell(event.getWhoClicked());
+
+			if (this.value > 0) this.sell(event.getWhoClicked());
 
 			return;
 		}
@@ -120,7 +120,7 @@ public class SellMerchantInventory implements InventoryHolder {
 					this.addItem(currentItemId);
 				} else if (currentItem != null) {
 					event.setCancelled(true);
-					event.getWhoClicked().sendMessage(String.format("§c§l> §7You can't sell §f%s§7!", currentItem.displayName()));
+					event.getWhoClicked().sendMessage("§c§l> §7You can't sell that!");
 				}
 			}
 
@@ -139,7 +139,7 @@ public class SellMerchantInventory implements InventoryHolder {
 			this.addItem(cursorItemId);
 		} else if (cursorItem.getType() != Material.AIR) {
 			event.setCancelled(true);
-			event.getWhoClicked().sendMessage(String.format("§c§l> §7You can't sell §f%s§7!", cursorItem.displayName()));
+			event.getWhoClicked().sendMessage("§c§l> §7You can't sell that!");
 		}
 	}
 }
