@@ -24,20 +24,20 @@ public class ClassCommand implements CommandWithName {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 		if (sender instanceof Player player) {
 			if (args.length != 1) {
-				player.sendMessage("Usage: /class <class name>");
+				player.sendMessage("§c§l> §7Usage: §f/class <name>§7.");
 				return true;
 			}
 
 			String className = args[0];
 			GameClassType classType = GameClassType.from(className.toLowerCase());
 			if (classType == null) {
-				player.sendMessage("Invalid class name");
+				player.sendMessage("§c§l> §7You did not provide a valid class name.");
 
 				return true;
 			}
 
 			if (this.plugin.gameManager.isInGame(player)) {
-				player.sendMessage("§c§l> §7You cannot change your class while in a game!");
+				player.sendMessage("§c§l> §7You cannot change your class while in a game.");
 
 				return true;
 			}

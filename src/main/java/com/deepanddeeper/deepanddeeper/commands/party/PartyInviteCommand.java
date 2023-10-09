@@ -30,18 +30,18 @@ public class PartyInviteCommand implements CommandWithName {
 
 			if (party.getLeader() != player) {
 				player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
-				return false;
+				return true;
 			}
 
 			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 			if (game != null && !game.hasEnded()) {
 				player.sendMessage("§c§l> §7You cannot invite a player during a game!");
-				return false;
+				return true;
 			}
 
 			if (party.isFull()) {
 				player.sendMessage("§c§l> §7Your party is full.");
-				return false;
+				return true;
 			}
 
 			for (String s : args) {

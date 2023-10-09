@@ -2,12 +2,16 @@ package com.deepanddeeper.deepanddeeper.classes;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.util.InventoryToBase64;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public abstract class GameClass {
 	protected DeepAndDeeper plugin;
@@ -21,7 +25,21 @@ public abstract class GameClass {
 	 *
 	 * @param player The player who activated the class.
 	 */
-	public abstract void onActivate(Player player);
+	public void onActivate(Player player) {
+		Connection connection = this.plugin.database.getConnection();
+
+		try (PreparedStatement statement = connection.prepareStatement("""
+			INSERT INTO "profile" ("user", "class", "active") VALUES (?, ?, TRUE)
+				ON CONFLICT ("user", "class") DO UPDATE SET "active" = TRUE;
+		""")) {
+			statement.setObject(1, player.getUniqueId());
+			statement.setInt(2, this.type().id());
+
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Fired when the player deactivates the class. Unlike `onActivate`, this is
@@ -29,7 +47,36 @@ public abstract class GameClass {
 	 *
 	 * @param player The player who deactivated the class.
 	 */
-	public abstract void onDeactivate(Player player);
+	public void onDeactivate(Player player) {
+		Connection connection = this.plugin.database.getConnection();
+
+		try (
+			PreparedStatement statement = connection.prepareStatement("""
+				UPDATE "profile" SET "active" = FALSE WHERE "user" = ? AND "class" = ?;
+			""");
+		) {
+			statement.setObject(1, player.getUniqueId());
+			statement.setInt(2, this.type().id());
+
+			statement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
+			.setBaseValue(20);
+
+		this.saveInventory(player, this.type());
+		player.getInventory().clear();
+
+		// remove weakness without using a potion effect
+		player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)
+			.setBaseValue(1);
+
+		// remove slowness without using a potion effect
+		player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+			.setBaseValue(0.2);
+	}
 
 	/**
 	 * Fired when the player clicks in their inventory.

@@ -22,6 +22,12 @@ public class ClassManager {
 		this.classes.put(player.getUniqueId(), gameClass);
 	}
 
+	public void blankActivateClass(Player player, GameClassType type) {
+		GameClass gameClass = type.getGameClass(this.plugin);
+
+		this.classes.put(player.getUniqueId(), gameClass);
+	}
+
 	public void deactivateClass(Player player) {
 		GameClass gameClass = this.classes.get(player.getUniqueId());
 

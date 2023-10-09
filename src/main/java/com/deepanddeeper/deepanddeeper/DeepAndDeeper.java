@@ -133,6 +133,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 					CREATE TABLE IF NOT EXISTS "profile" (
 						"id" SERIAL PRIMARY KEY,
+						"class" SMALLINT NOT NULL,
 						"user" UUID NOT NULL,
 						"active" BOOLEAN NOT NULL,
 						"coins" INT DEFAULT 0,
@@ -140,7 +141,9 @@ public final class DeepAndDeeper extends JavaPlugin {
 						"losses" INT DEFAULT 0,
 						"kills" INT DEFAULT 0,
 						"deaths" INT DEFAULT 0,
-						"xp" INT DEFAULT 0
+						"xp" INT DEFAULT 0,
+
+						UNIQUE ("user", "class")
 					);
 
 					CREATE TABLE IF NOT EXISTS "stash" (

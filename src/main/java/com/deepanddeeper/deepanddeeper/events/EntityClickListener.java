@@ -13,6 +13,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -75,6 +76,25 @@ public class EntityClickListener implements Listener {
 
 		event.setCancelled(true);
 		event.getPlayer().openInventory(inventory.getInventory());
+	}
+
+	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent event) throws SQLException {
+		var inventory = event.getInventory();
+
+		if (inventory.getHolder(false) instanceof SellMerchantInventory merchantInventory) {
+			merchantInventory.onInventoryClose(event);
+
+			return;
+		}
+
+		for (var entry : this.inventories.entrySet()) {
+			if (entry.getValue().getInventory().equals(inventory)) {
+				((InventoryHolderWithId) entry.getValue()).onInventoryClose(event);
+
+				return;
+			}
+		}
 	}
 
 	@EventHandler

@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -81,6 +82,10 @@ public class SellMerchantInventory implements InventoryHolder {
 		String itemId = meta.getPersistentDataContainer().get(this.plugin.itemManager.idKey, PersistentDataType.STRING);
 
 		this.value(this.value - this.plugin.itemManager.item(itemId).sellPrice());
+	}
+
+	public void onInventoryClose(InventoryCloseEvent event) throws SQLException {
+		this.sell(event.getPlayer());
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) throws SQLException {

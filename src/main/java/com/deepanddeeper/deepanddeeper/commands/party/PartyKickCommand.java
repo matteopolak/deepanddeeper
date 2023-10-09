@@ -30,14 +30,14 @@ public class PartyKickCommand implements CommandWithName {
 			Party party = this.plugin.partyManager.getParty(player);
 			if (party.getLeader() != player) {
 				player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
-				return false;
+				return true;
 			}
 
 			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
 			if (game != null && !game.hasEnded()) {
 				player.sendMessage("§c§l> §7You cannot kick a player during a game!");
-				return false;
+				return true;
 			}
 
 			Player playerToKick = Bukkit.getPlayerExact(args[0]);
@@ -47,9 +47,8 @@ public class PartyKickCommand implements CommandWithName {
 			} else {
 				player.sendMessage("§b§l> §fPlayer could not be found.");
 			}
-
 		}
-		return true;
 
+		return true;
 	}
 }

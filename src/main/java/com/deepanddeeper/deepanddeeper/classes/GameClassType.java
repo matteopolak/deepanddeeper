@@ -43,7 +43,29 @@ public enum GameClassType {
 	public GameClass getGameClass(DeepAndDeeper plugin) {
 		return switch (this) {
 			case WIZARD -> new WizardClass(plugin);
+			case FIGHTER -> new FighterClass(plugin);
 			default -> null;
+		};
+	}
+
+	public static GameClassType fromId(int id) {
+		return switch (id) {
+			case 0 -> WIZARD;
+			case 1 -> RANGER;
+			case 2 -> ROGUE;
+			case 3 -> BARBARIAN;
+			case 4 -> FIGHTER;
+			default -> null;
+		};
+	}
+
+	public int id() {
+		return switch (this) {
+			case WIZARD -> 0;
+			case RANGER -> 1;
+			case ROGUE -> 2;
+			case BARBARIAN -> 3;
+			case FIGHTER -> 4;
 		};
 	}
 }

@@ -1,6 +1,7 @@
 package com.deepanddeeper.deepanddeeper.items;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,8 @@ public class ItemManager {
 	}
 
 	public Item item(String id) {
+		Bukkit.getLogger().info("ItemManager.item: " + id + " " + this.items.containsKey(id));
+
 		return this.items.get(id);
 	}
 

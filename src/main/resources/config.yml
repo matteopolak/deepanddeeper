@@ -98,7 +98,59 @@ weapons:
     sell_price: 0
     classes:
       - wizard
+  # base fighter weapon
+  - id: basic_sword
+    name: §7Basic §fSword
+    lore:
+      - §8The most basic of swords.
+      - ''
+      - '§7Damage: §c50'
+      - '§7Cooldown: §b2.5s'
+    damage: 50.0
+    cooldown: 2.5
+    material: STONE_SWORD
+    buy_price: 300
+    sell_price: 40
+    classes:
+      - fighter
 armor:
+  # base fighter armor
+  - id: basic_helmet
+    name: §7Basic §fHelmet
+    lore:
+      - §8The most basic of helmets.
+    material: LEATHER_HELMET
+    buy_price: 100
+    sell_price: 15
+    classes:
+      - fighter
+  - id: basic_chestplate
+    name: §7Basic §fChestplate
+    lore:
+      - §8The most basic of chestplates.
+    material: LEATHER_CHESTPLATE
+    buy_price: 100
+    sell_price: 15
+    classes:
+      - fighter
+  - id: basic_leggings
+    name: §7Basic §fLeggings
+    lore:
+      - §8The most basic of leggings.
+    material: LEATHER_LEGGINGS
+    buy_price: 100
+    sell_price: 15
+    classes:
+      - fighter
+  - id: basic_boots
+    name: §7Basic §fBoots
+    lore:
+      - §8The most basic of boots.
+    material: LEATHER_BOOTS
+    buy_price: 100
+    sell_price: 15
+    classes:
+      - fighter
   - id: wizard_helmet
     name: §5Wizard's Helmet
     lore:

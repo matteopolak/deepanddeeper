@@ -1,6 +1,7 @@
 package com.deepanddeeper.deepanddeeper.events;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
+import com.deepanddeeper.deepanddeeper.classes.GameClassType;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -46,10 +47,10 @@ public class PlayerJoinListener implements Listener {
 
 		try (
 			PreparedStatement insertUser = connection.prepareStatement("""
-					INSERT INTO "user" ("uuid") VALUES (?);
+					INSERT INTO "user" ("uuid") VALUES (?) ON CONFLICT DO NOTHING;
 				""");
-			PreparedStatement insertProfile = connection.prepareStatement("""
-					INSERT INTO "profile" ("user", "active") VALUES (?, TRUE);
+			PreparedStatement getActiveProfile = connection.prepareStatement("""
+					SELECT "class" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
 				""");
 		) {
 			player.sendMessage("§b§l> §7Checking if you have a profile...");
@@ -59,15 +60,23 @@ public class PlayerJoinListener implements Listener {
 			insertUser.setObject(1, player.getUniqueId());
 			insertUser.execute();
 
-			insertProfile.setObject(1, player.getUniqueId());
-			insertProfile.execute();
+			getActiveProfile.setObject(1, player.getUniqueId());
+
+			var activeProfileResultSet = getActiveProfile.executeQuery();
+
+			if (activeProfileResultSet.next()) {
+				var classId = activeProfileResultSet.getInt("class");
+				GameClassType gameClassType = GameClassType.fromId(classId);
+
+				this.plugin.classManager.blankActivateClass(player, gameClassType);
+				player.sendMessage(String.format("§a§l> §7Welcome back! You are a §f%s§7.", gameClassType.colouredName()));
+
+				return;
+			}
 
 			connection.commit();
-			player.sendMessage("§a§l> §7Your profile has been created!");
-
-			this.plugin.getLogger().info("Created user and profile for " + player.getName());
 		} catch (SQLException e) {
-			player.sendMessage("§b§l> §7You already have a profile, welcome back!");
+			player.sendMessage("§c§l> §7An error occurred while loading your profile. Please try again later.");
 
 			// If the user already exists, ignore the error
 			if (e.getErrorCode() != 0) {

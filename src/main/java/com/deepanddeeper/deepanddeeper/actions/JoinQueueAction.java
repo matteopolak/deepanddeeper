@@ -35,6 +35,11 @@ public class JoinQueueAction implements Action {
 			return;
 		}
 
+		if (!this.plugin.classManager.classes.containsKey(player.getUniqueId())) {
+			player.sendMessage("§c§l> §7You must select a class before joining the queue.");
+			return;
+		}
+
 		if (!this.plugin.gameManager.queue.add(party)) {
 			this.plugin.gameManager.queue.remove(party);
 

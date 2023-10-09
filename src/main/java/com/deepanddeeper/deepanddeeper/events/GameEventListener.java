@@ -4,6 +4,7 @@ import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.classes.GameClass;
 import com.deepanddeeper.deepanddeeper.game.Game;
 import com.destroystokyo.paper.ParticleBuilder;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -17,15 +18,32 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+class HoldData {
+	public long firstHeld;
+	public long lastHeld;
+
+	public HoldData(long held) {
+		this.firstHeld = held;
+		this.lastHeld = held;
+	}
+}
 
 public class GameEventListener implements Listener {
 	private final DeepAndDeeper plugin;
+	private final Map<UUID, HoldData> pendingEscapePortalOpenTasks = new HashMap<>();
 
 	public GameEventListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -141,6 +159,66 @@ public class GameEventListener implements Listener {
 
 			game.sendMessage(String.format("§c§l> §f%s §7has left the game!", player.getName()));
 			game.removePlayer(player);
+		}
+	}
+
+	// check if player is holding right click on a prismarine wall
+	// if they hold right click for 5 seconds, teleport them to the lobby
+	@EventHandler
+	public void onPlayerInteractWithEscape(PlayerInteractEvent event) {
+		if (event.getHand() != EquipmentSlot.HAND) return;
+
+		Player player = event.getPlayer();
+		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+
+		if (game != null && !game.hasEnded() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			Block block = event.getClickedBlock();
+			if (block == null) return;
+
+			if (block.getType() == Material.PRISMARINE_WALL) {
+				long now = System.currentTimeMillis();
+
+				HoldData data = this.pendingEscapePortalOpenTasks
+					.computeIfAbsent(player.getUniqueId(), uuid -> new HoldData(now));
+
+				// if their last hold was within the last 100ms, increment the ticks held
+				if (now - data.lastHeld > 300) {
+					data.firstHeld = now;
+				}
+
+				data.lastHeld = now;
+
+				// One iteration is around 200ms
+				if (now - data.firstHeld >= 5_000) {
+					// replace the block with a blue banner
+					block.setType(Material.BLUE_BANNER);
+
+					player.sendActionBar(Component.text("§fYou have opened a §9blue portal§f!"));
+				} else {
+					// send a message to the player with how long they have left
+					player.sendActionBar(Component.text(String.format(
+						"§fOpening portal... (§b%d seconds left§f)",
+						(int) Math.ceil(((double) (5_000 - (now - data.firstHeld))) / (double) 1_000))
+					));
+				}
+			}
+		}
+	}
+
+	// if the player walks into a blue banner, teleport them to the lobby
+	@EventHandler
+	public void onPlayerWalkIntoEscapePortal(PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		Block block = player.getLocation().getBlock();
+
+		if (block.getType() == Material.BLUE_BANNER) {
+			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+
+			if (game != null && !game.hasEnded()) {
+				player.teleport(Bukkit.getWorld("world").getSpawnLocation());
+				player.sendMessage("§b§l> §7You have escaped the dungeon!");
+				game.removePlayer(player);
+			}
 		}
 	}
 }

@@ -169,52 +169,21 @@ public class Game extends BukkitRunnable {
 		}
 	}
 
-	public void removePlayer(Player player) throws SQLException {
-		// If no players are left, then the last one to die is the winner
-		if (this.livingPlayers.size() > 1)
-			this.livingPlayers.remove(player);
-
-		Player reference = null;
-
-		for (Player p : this.livingPlayers) {
-			if (reference == null) reference = p;
-			else if (this.plugin.partyManager.getParty(p) != this.plugin.partyManager.getParty(reference)) {
-				return;
-			}
-		}
-
-		// At this point, all players are in the same party
-		// so the game has ended!
+	public void end() {
 		this.ended = true;
-
-		for (Player p : this.livingPlayers) {
-			p.teleport(Bukkit.getWorld("world").getSpawnLocation());
-		}
 
 		String worldName = this.world.getName();
 		Bukkit.unloadWorld(worldName, false);
+
 		GameManager.freeGameIds.add(this.id);
+	}
 
-		if (reference == null) return;
+	public void removePlayer(Player player) {
+		this.livingPlayers.remove(player);
+		this.plugin.playingTeam.removePlayer(player);
 
-		Party winningParty = this.plugin.partyManager.getParty(reference);
-
-		for (Player p : winningParty.getMembers()) {
-			this.plugin.statisticsManager.addWin(p);
-			this.plugin.playingTeam.removePlayer(player);
-		}
-
-		winningParty.sendMessage("§b§l> §7Your party has won the game!");
-
-		for (Party party : this.parties) {
-			if (party == winningParty) continue;
-
-			for (Player p : party.getMembers()) {
-				this.plugin.statisticsManager.addLoss(p);
-				this.plugin.playingTeam.removePlayer(player);
-			}
-
-			party.sendMessage("§b§l> §7Your party has lost the game.");
+		if (this.livingPlayers.isEmpty()) {
+			this.end();
 		}
 	}
 }
