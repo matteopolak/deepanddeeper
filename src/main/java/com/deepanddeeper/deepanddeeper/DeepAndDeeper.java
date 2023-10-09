@@ -48,7 +48,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		Listener[] listeners = {
 			new PartyEventListener(this),
-			new PlayerJoinListener(this),
+			new PlayerJoinQuitListener(this),
 			new EntityClickListener(this),
 			new GameEventListener(this),
 			new ClassEventListener(this),

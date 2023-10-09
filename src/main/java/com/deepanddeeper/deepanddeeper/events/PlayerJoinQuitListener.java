@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -18,15 +19,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-public class PlayerJoinListener implements Listener {
+public class PlayerJoinQuitListener implements Listener {
 	private final DeepAndDeeper plugin;
 
-	public PlayerJoinListener(DeepAndDeeper plugin) {
+	public PlayerJoinQuitListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;
 	}
 
 	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		event.quitMessage(null);
+	}
+
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) throws SQLException {
+		event.joinMessage(null);
+
 		Player player = event.getPlayer();
 
 		// Teleport the player to the lobby

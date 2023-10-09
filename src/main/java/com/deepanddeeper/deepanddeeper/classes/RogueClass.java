@@ -5,10 +5,10 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class FighterClass extends GameClass {
+public class RogueClass extends GameClass {
 	private final ItemStack[] defaultItems;
 
-	public FighterClass(DeepAndDeeper plugin) {
+	public RogueClass(DeepAndDeeper plugin) {
 		super(plugin);
 
 		ItemStack[] defaultItems = new ItemStack[41];
@@ -27,18 +27,18 @@ public class FighterClass extends GameClass {
 	@Override
 	public void applyEffects(Player player) {
 		player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
-			.setBaseValue(28);
+			.setBaseValue(16);
 
 		// add weakness without using a potion effect
 		player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)
-			.setBaseValue(1.2);
+			.setBaseValue(1.5);
 
 		// add slowness without using a potion effect
 		player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
-			.setBaseValue(0.1);
+			.setBaseValue(0.25);
 
 		// fully restore health and hunger
-		player.setHealth(28);
+		player.setHealth(16);
 		player.setFoodLevel(20);
 	}
 
@@ -49,7 +49,7 @@ public class FighterClass extends GameClass {
 
 	@Override
 	public GameClassType type() {
-		return GameClassType.FIGHTER;
+		return GameClassType.ROGUE;
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.util.InventoryToBase64;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,12 +21,16 @@ public abstract class GameClass {
 		this.plugin = plugin;
 	}
 
+	public abstract void applyEffects(Player player);
+
 	/**
 	 * Fired when the player activates the class or dies.
 	 *
 	 * @param player The player who activated the class.
 	 */
 	public void onActivate(Player player) {
+		this.applyEffects(player);
+
 		Connection connection = this.plugin.database.getConnection();
 
 		try (PreparedStatement statement = connection.prepareStatement("""
@@ -38,6 +43,10 @@ public abstract class GameClass {
 			statement.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}
+
+		if (!this.readInventory(player, this.type())) {
+			player.getInventory().setContents(this.defaultItems());
 		}
 	}
 
@@ -87,6 +96,7 @@ public abstract class GameClass {
 	public abstract boolean canModifySlot(int slot);
 
 	public abstract GameClassType type();
+	public abstract ItemStack[] defaultItems();
 
 	protected boolean saveInventory(Player player, GameClassType type) {
 		String filename = type.filename();

@@ -113,6 +113,20 @@ weapons:
     sell_price: 40
     classes:
       - fighter
+  - id: basic_bow
+    name: §7Basic §fBow
+    lore:
+      - §8The most basic of bows.
+      - ''
+      - '§7Damage: §c50'
+      - '§7Cooldown: §b2.5s'
+    damage: 50.0
+    cooldown: 2.5
+    material: BOW
+    buy_price: 300
+    sell_price: 40
+    classes:
+      - fighter
 armor:
   # base fighter armor
   - id: basic_helmet

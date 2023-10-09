@@ -27,15 +27,9 @@ public class WizardClass extends GameClass {
 	}
 
 	@Override
-	public void onActivate(Player player) {
-		super.onActivate(player);
-
+	public void applyEffects(Player player) {
 		player.getAttribute(Attribute.GENERIC_MAX_HEALTH)
 			.setBaseValue(16);
-
-		if (!this.readInventory(player, this.type())) {
-			player.getInventory().setContents(this.defaultItems);
-		}
 
 		// add weakness without using a potion effect
 		player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)
@@ -68,5 +62,10 @@ public class WizardClass extends GameClass {
 	@Override
 	public GameClassType type() {
 		return GameClassType.WIZARD;
+	}
+
+	@Override
+	public ItemStack[] defaultItems() {
+		return this.defaultItems;
 	}
 }

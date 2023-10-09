@@ -25,6 +25,7 @@ public class ClassManager {
 	public void blankActivateClass(Player player, GameClassType type) {
 		GameClass gameClass = type.getGameClass(this.plugin);
 
+		gameClass.applyEffects(player);
 		this.classes.put(player.getUniqueId(), gameClass);
 	}
 
