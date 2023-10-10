@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import java.util.UUID;
 
 public class JoinQueueAction implements Action {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public JoinQueueAction(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -42,13 +42,13 @@ public class JoinQueueAction implements Action {
 
 		if (this.plugin.gameManager.queue.contains(party)) {
 			player.sendMessage("§a§l> §7You have left the queue!");
+
+			this.plugin.gameManager.queue.remove(party);
 			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
 				"§fWaiting for parties... (§b%d§f/%d)",
 				this.plugin.gameManager.queue.size(),
 				this.plugin.gameManager.queue.maxSize()
 			)));
-
-			this.plugin.gameManager.queue.remove(party);
 		} else {
 			player.sendMessage("§a§l> §7You have joined the queue!");
 

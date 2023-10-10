@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class PartyManager {
-	private HashMap<UUID, Party> parties = new HashMap<>();
+	private final HashMap<UUID, Party> parties = new HashMap<>();
 
 	public @NotNull Party create(Player leader) {
 		Party currentParty = this.parties.get(leader.getUniqueId());

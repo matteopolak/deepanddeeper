@@ -24,7 +24,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class GameEventListener implements Listener {
 		Player player = event.getPlayer();
 		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-		if (game == null || game.hasEnded()) {
+		if (game == null || game.ended()) {
 			return;
 		}
 
@@ -79,7 +78,7 @@ public class GameEventListener implements Listener {
 		Player player = event.getPlayer();
 		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-		if (game != null && !game.hasEnded() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (game != null && !game.ended() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
 			if (block == null) return;
 
@@ -171,7 +170,7 @@ public class GameEventListener implements Listener {
 		Player player = event.getPlayer();
 		Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-		if (game != null && !game.hasEnded() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+		if (game != null && !game.ended() && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Block block = event.getClickedBlock();
 			if (block == null) return;
 
@@ -214,7 +213,7 @@ public class GameEventListener implements Listener {
 		if (block.getType() == Material.BLUE_BANNER) {
 			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-			if (game != null && !game.hasEnded()) {
+			if (game != null && !game.ended()) {
 				player.teleport(Bukkit.getWorld("world").getSpawnLocation());
 				player.sendMessage("§b§l> §7You have escaped the dungeon!");
 				game.removePlayer(player);

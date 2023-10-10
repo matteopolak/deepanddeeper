@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class PartyInviteCommand implements CommandWithName {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public PartyInviteCommand(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -34,7 +34,7 @@ public class PartyInviteCommand implements CommandWithName {
 			}
 
 			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
-			if (game != null && !game.hasEnded()) {
+			if (game != null && !game.ended()) {
 				player.sendMessage("§c§l> §7You cannot invite a player during a game!");
 				return true;
 			}

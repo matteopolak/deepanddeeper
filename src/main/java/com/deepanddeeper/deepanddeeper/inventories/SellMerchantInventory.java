@@ -85,7 +85,7 @@ public class SellMerchantInventory implements InventoryHolder {
 	}
 
 	public void onInventoryClose(InventoryCloseEvent event) throws SQLException {
-		this.sell(event.getPlayer());
+		if (this.value > 0) this.sell(event.getPlayer());
 	}
 
 	public void onInventoryClick(InventoryClickEvent event) throws SQLException {

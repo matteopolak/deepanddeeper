@@ -3,14 +3,15 @@ package com.deepanddeeper.deepanddeeper.game;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Queue {
-	public static final int PARTIES_PER_GAME = 1;
+	public static final int PARTIES_PER_GAME = 2;
 
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 	private List<Party> queue = new ArrayList<>();
 
 	public Queue(DeepAndDeeper plugin) {
@@ -22,11 +23,15 @@ public class Queue {
 			return false;
 		}
 
+		Bukkit.getLogger().info(String.format("Added party %s to queue", party.getLeader().getName()));
+
 		this.queue.add(party);
 
 		if (this.size() >= PARTIES_PER_GAME) {
-			this.plugin.gameManager.startGame(this.queue);
+			List<Party> parties = this.queue;
 			this.queue = new ArrayList<>();
+
+			this.plugin.gameManager.startGame(parties);
 		}
 
 		return true;
@@ -43,6 +48,8 @@ public class Queue {
 	 * @return `true` if the party was in the queue beforehand
 	 */
 	public boolean remove(Party party) {
+		Bukkit.getLogger().info(String.format("Removed party %s from queue", party.getLeader().getName()));
+
 		return this.queue.remove(party);
 	}
 

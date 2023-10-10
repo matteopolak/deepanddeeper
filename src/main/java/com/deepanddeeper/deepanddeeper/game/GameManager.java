@@ -3,6 +3,7 @@ package com.deepanddeeper.deepanddeeper.game;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.map.Map;
 import com.deepanddeeper.deepanddeeper.party.Party;
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -14,9 +15,9 @@ public class GameManager {
 	public Queue queue;
 	public java.util.Map<UUID, Game> games = new HashMap<>();
 
-	private DeepAndDeeper plugin;
-	private Map[] maps;
-	private Random random = new Random();
+	private final DeepAndDeeper plugin;
+	private final Map[] maps;
+	private final Random random = new Random();
 
 	public GameManager(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -30,7 +31,7 @@ public class GameManager {
 	public boolean isInGame(Player player) {
 		Game game = this.games.get(player.getUniqueId());
 
-		return game != null && !game.hasEnded();
+		return game != null && !game.ended();
 	}
 
 	public Game startGame(List<Party> parties) {
@@ -38,9 +39,8 @@ public class GameManager {
 
 		String worldName = String.format("game-%d", nextId);
 		Map map = this.chooseRandomMap();
-		World world = map.generate(worldName);
 
-		Game game = new Game(nextId, this.plugin, parties, world, map);
+		Game game = new Game(nextId, this.plugin, parties, null, map);
 
 		for (Party party : parties) {
 			for (Player player : party.getMembers()) {
@@ -48,6 +48,11 @@ public class GameManager {
 			}
 		}
 
+		Bukkit.getLogger().info(String.format("Starting game %d with %d parties", nextId, parties.size()));
+
+		World world = map.generate(worldName);
+
+		game.world(world);
 		game.countdownAndStart();
 
 		return game;

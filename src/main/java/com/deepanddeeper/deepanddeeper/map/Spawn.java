@@ -7,11 +7,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class Spawn {
-	private double x;
-	private double y;
-	private double z;
-	private float yaw;
-	private float pitch;
+	private final double x;
+	private final double y;
+	private final double z;
+	private final float yaw;
+	private final float pitch;
 
 	public Spawn(double x, double y, double z, float yaw, float pitch) {
 		this.x = x;

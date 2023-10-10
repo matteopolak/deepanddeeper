@@ -8,10 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public class Enemy implements ConfigurationSerializable {
-	private EntityType type;
 
 	public Enemy(@NotNull EntityType type) {
-		this.type = type;
 	}
 
 	@Override

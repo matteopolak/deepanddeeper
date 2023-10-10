@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class StatisticsManager {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public StatisticsManager(DeepAndDeeper plugin) {
 		this.plugin = plugin;

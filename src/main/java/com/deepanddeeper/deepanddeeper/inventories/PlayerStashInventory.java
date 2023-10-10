@@ -35,7 +35,7 @@ public class PlayerStashInventory implements InventoryHolder {
 				""");
 			PreparedStatement getItemsStatement = connection.prepareStatement("""
 					SELECT "item_id", "slot" FROM "stash" WHERE "profile_id" = ? ORDER BY "slot" ASC;
-				""");
+				""")
 		) {
 			getProfileIdStatement.setObject(1, playerId);
 
@@ -71,7 +71,7 @@ public class PlayerStashInventory implements InventoryHolder {
 			PreparedStatement addItemStatement = connection.prepareStatement("""
 					INSERT INTO "stash" ("profile_id", "item_id", "slot") VALUES (?, ?, ?)
 						ON CONFLICT ("profile_id", "slot") DO UPDATE SET "item_id" = excluded."item_id";
-				""");
+				""")
 		) {
 			ItemStack item = this.plugin.itemManager.item(itemId).item();
 
@@ -91,7 +91,7 @@ public class PlayerStashInventory implements InventoryHolder {
 		try (
 			PreparedStatement removeItemStatement = connection.prepareStatement("""
 					DELETE FROM "stash" WHERE "profile_id" = ? AND "slot" = ?;
-				""");
+				""")
 		) {
 			removeItemStatement.setInt(1, this.profileId);
 			removeItemStatement.setInt(2, slot);

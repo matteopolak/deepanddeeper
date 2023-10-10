@@ -11,7 +11,7 @@ public class Party {
 	public static final int MAX_PARTY_SIZE = 3;
 	public HashSet<Player> members = new HashSet<>();
 	private Player leader;
-	private HashSet<Player> invites = new HashSet<>();
+	private final HashSet<Player> invites = new HashSet<>();
 
 	public Party(Player leader) {
 		this.leader = leader;

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 public class ClassCommand implements CommandWithName {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public ClassCommand(DeepAndDeeper plugin) {
 		this.plugin = plugin;

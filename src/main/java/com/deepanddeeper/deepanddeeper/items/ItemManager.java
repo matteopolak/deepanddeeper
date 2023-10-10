@@ -15,7 +15,7 @@ public class ItemManager {
 	public NamespacedKey idKey;
 	public Map<String, Item> items;
 	private DeepAndDeeper plugin;
-	private Map<UUID, Map<String, Long>> cooldowns = new HashMap<>();
+	private final Map<UUID, Map<String, Long>> cooldowns = new HashMap<>();
 
 	public ItemManager(DeepAndDeeper plugin) {
 		this.plugin = plugin;

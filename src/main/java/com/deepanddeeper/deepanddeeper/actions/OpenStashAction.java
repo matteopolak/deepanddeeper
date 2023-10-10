@@ -9,12 +9,10 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.UUID;
 
 public class OpenStashAction implements Action {
-	private DeepAndDeeper plugin;
-	private NamespacedKey itemId;
+	private final DeepAndDeeper plugin;
 
 	public OpenStashAction(DeepAndDeeper plugin) {
 		this.plugin = plugin;
-		this.itemId = new NamespacedKey(plugin, "itemId");
 	}
 
 	@Override

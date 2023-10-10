@@ -8,7 +8,7 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.UUID;
 
 public class OpenSellMerchantAction implements Action {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public OpenSellMerchantAction(DeepAndDeeper plugin) {
 		this.plugin = plugin;

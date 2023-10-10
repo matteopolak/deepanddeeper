@@ -24,8 +24,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class EntityClickListener implements Listener {
-	private HashMap<UUID, InventoryHolder> inventories = new HashMap<>();
-	private HashMap<UUID, Action> actions = new HashMap<>();
+	private final HashMap<UUID, InventoryHolder> inventories = new HashMap<>();
+	private final HashMap<UUID, Action> actions = new HashMap<>();
 
 	public EntityClickListener(DeepAndDeeper plugin) {
 		InventoryHolderWithId[] inventories = {

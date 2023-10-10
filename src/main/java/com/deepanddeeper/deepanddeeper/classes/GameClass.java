@@ -62,7 +62,7 @@ public abstract class GameClass {
 		try (
 			PreparedStatement statement = connection.prepareStatement("""
 				UPDATE "profile" SET "active" = FALSE WHERE "user" = ? AND "class" = ?;
-			""");
+			""")
 		) {
 			statement.setObject(1, player.getUniqueId());
 			statement.setInt(2, this.type().id());

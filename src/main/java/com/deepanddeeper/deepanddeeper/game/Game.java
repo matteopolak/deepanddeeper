@@ -11,6 +11,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -24,23 +25,24 @@ enum GameState {
 }
 
 public class Game extends BukkitRunnable {
-	private DeepAndDeeper plugin;
-	private List<Party> parties;
+	private final DeepAndDeeper plugin;
+	private final List<Party> parties;
 	private World world;
-	private Map map;
-	private boolean ended = true;
+	private final Map map;
+	private boolean started = false;
+	private boolean ended = false;
 	private GameState state;
 	private int borderIndex = 0;
 	private long borderTimeLeft = 0;
 
-	private Set<Player> livingPlayers = new HashSet<>();
+	private final Set<Player> livingPlayers = new HashSet<>();
 
 	private int countdown = 5;
-	private int id;
+	private final int id;
 
 	private final Random random = new Random();
 
-	public Game(int id, @NotNull DeepAndDeeper plugin, @NotNull List<Party> parties, @NotNull World world, @NotNull Map map) {
+	public Game(int id, @NotNull DeepAndDeeper plugin, @NotNull List<Party> parties, @Nullable World world, @NotNull Map map) {
 		this.id = id;
 		this.plugin = plugin;
 		this.parties = parties;
@@ -59,12 +61,18 @@ public class Game extends BukkitRunnable {
 		return this.parties;
 	}
 
-	public @NotNull World getWorld() {
+	public @NotNull World world() {
 		return this.world;
 	}
+	public void world(World world) {
+		this.world = world;
+	}
 
-	public boolean hasEnded() {
+	public boolean ended() {
 		return this.ended;
+	}
+	public boolean started() {
+		return this.started;
 	}
 
 	public void sendMessage(String message) {
@@ -133,7 +141,7 @@ public class Game extends BukkitRunnable {
 					this.cancel();
 				}
 
-				this.ended = false;
+				this.started = true;
 
 				for (int i = 0; i < this.parties.size(); ++i) {
 					Location spawn = this.map.spawns().get(i).location(this.world);

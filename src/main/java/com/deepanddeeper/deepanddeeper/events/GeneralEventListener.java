@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 
 public class GeneralEventListener implements Listener {
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public GeneralEventListener(DeepAndDeeper plugin) {
 		this.plugin = plugin;

@@ -36,7 +36,7 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
 	public ClassManager classManager = new ClassManager(this);
 	public Team playingTeam;
-	private FileConfiguration config = this.getConfig();
+	private final FileConfiguration config = this.getConfig();
 	private Scoreboard scoreboard;
 
 	public static DeepAndDeeper getInstance() {

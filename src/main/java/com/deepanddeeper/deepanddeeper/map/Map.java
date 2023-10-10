@@ -25,8 +25,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class Map {
-	private File file;
-	private ClipboardFormat clipboard;
+	private final File file;
+	private final ClipboardFormat clipboard;
 
 	private List<Spawn> spawns;
 	private String id;

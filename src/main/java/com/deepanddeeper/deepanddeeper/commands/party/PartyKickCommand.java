@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PartyKickCommand implements CommandWithName {
 
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public PartyKickCommand(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -35,7 +35,7 @@ public class PartyKickCommand implements CommandWithName {
 
 			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-			if (game != null && !game.hasEnded()) {
+			if (game != null && !game.ended()) {
 				player.sendMessage("§c§l> §7You cannot kick a player during a game!");
 				return true;
 			}

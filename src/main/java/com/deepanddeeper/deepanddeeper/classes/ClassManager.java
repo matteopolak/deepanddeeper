@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class ClassManager {
 	public Map<UUID, GameClass> classes = new HashMap<>();
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public ClassManager(DeepAndDeeper plugin) {
 		this.plugin = plugin;

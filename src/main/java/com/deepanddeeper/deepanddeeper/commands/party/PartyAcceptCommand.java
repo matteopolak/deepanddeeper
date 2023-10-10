@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PartyAcceptCommand implements CommandWithName {
 
-	private DeepAndDeeper plugin;
+	private final DeepAndDeeper plugin;
 
 	public PartyAcceptCommand(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -37,14 +37,12 @@ public class PartyAcceptCommand implements CommandWithName {
 				return true;
 			}
 
-			Game currentGame = this.plugin.gameManager.games.get(player.getUniqueId());
-			if (currentGame != null && !currentGame.hasEnded()) {
+			if (this.plugin.gameManager.isInGame(player)) {
 				player.sendMessage("§c§l> §7You cannot accept an invite during a game!");
 				return true;
 			}
 
-			Game inviteGame = this.plugin.gameManager.games.get(partyLeader.getUniqueId());
-			if (inviteGame != null && !inviteGame.hasEnded()) {
+			if (this.plugin.gameManager.isInGame(partyLeader)) {
 				player.sendMessage("§c§l> §7You cannot accept an invite from a party that is currently in a game!");
 				return true;
 			}

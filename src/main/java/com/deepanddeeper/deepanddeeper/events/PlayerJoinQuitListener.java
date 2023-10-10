@@ -59,7 +59,7 @@ public class PlayerJoinQuitListener implements Listener {
 				""");
 			PreparedStatement getActiveProfile = connection.prepareStatement("""
 					SELECT "class" FROM "profile" WHERE "user" = ? AND "active" = TRUE;
-				""");
+				""")
 		) {
 			player.sendMessage("§b§l> §7Checking if you have a profile...");
 
