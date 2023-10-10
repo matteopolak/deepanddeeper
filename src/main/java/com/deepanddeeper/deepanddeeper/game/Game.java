@@ -3,6 +3,7 @@ package com.deepanddeeper.deepanddeeper.game;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.map.Map;
 import com.deepanddeeper.deepanddeeper.party.Party;
+import com.deepanddeeper.deepanddeeper.util.Pair;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 enum GameState {
@@ -35,6 +37,8 @@ public class Game extends BukkitRunnable {
 
 	private int countdown = 5;
 	private int id;
+
+	private final Random random = new Random();
 
 	public Game(int id, @NotNull DeepAndDeeper plugin, @NotNull List<Party> parties, @NotNull World world, @NotNull Map map) {
 		this.id = id;
@@ -158,6 +162,8 @@ public class Game extends BukkitRunnable {
 				this.world.getWorldBorder().setSize(border.first, border.second);
 				this.borderIndex++;
 
+				this.spawnPortals(border);
+
 				if (this.borderIndex < borders.size()) {
 					this.borderTimeLeft = border.second;
 				} else {
@@ -165,6 +171,64 @@ public class Game extends BukkitRunnable {
 				}
 			} else {
 				this.cancel();
+			}
+		}
+	}
+
+	public void spawnPortals(Pair<Double, Long> border) {
+		int sideLength = border.first.intValue() / 2;
+		int upperBound = (int) (border.first * Math.sqrt(border.first) * 0.1);
+
+		for (int x = -sideLength; x < border.first; x += 5) {
+			for (int z = -sideLength; z < border.first; z += 5) {
+				for (int y = -16; y < 16; ++y) {
+					Location location = new Location(this.world, x, y, z);
+
+					if (location.getBlock().isPassable()) continue;
+					if (!location.add(0, 1, 0).getBlock().isPassable()) continue;
+					if (!location.add(0, 1, 0).getBlock().isPassable()) continue;
+
+					location.add(0, -1, 0);
+
+					boolean hasAirAround = true;
+					boolean hasBlocksUnder = true;
+
+					for (int x2 = -1; x2 <= 1; ++x2) {
+						for (int z2 = -1; z2 <= 1; ++z2) {
+							if (!location.clone().add(x2, 0, z2).getBlock().isPassable()) {
+								hasAirAround = false;
+
+								if (!hasBlocksUnder) break;
+							}
+
+							if (location.clone().add(x2, -1, z2).getBlock().isPassable()) {
+								hasBlocksUnder = false;
+
+								if (!hasAirAround) break;
+							}
+						}
+					}
+
+					if (!hasAirAround || !hasBlocksUnder) continue;
+
+					boolean hasBlockAbove = false;
+
+					// ensure there is a block above the block at most 16 block above
+					for (int y2 = 1; y2 <= 16; ++y2) {
+						if (!location.clone().add(0, y2, 0).getBlock().isPassable()) {
+							hasBlockAbove = true;
+							break;
+						}
+					}
+
+					if (!hasBlockAbove) continue;
+					if (this.random.nextInt(upperBound) != 0) continue;
+
+					// set the block to a prismarine wall
+					location.getBlock().setType(Material.PRISMARINE_WALL);
+
+					this.sendMessage("§9§l> §7An escape portal has opened!");
+				}
 			}
 		}
 	}

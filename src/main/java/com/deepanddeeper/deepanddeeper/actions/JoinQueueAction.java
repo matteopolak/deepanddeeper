@@ -40,19 +40,19 @@ public class JoinQueueAction implements Action {
 			return;
 		}
 
-		if (!this.plugin.gameManager.queue.add(party)) {
-			this.plugin.gameManager.queue.remove(party);
-
+		if (this.plugin.gameManager.queue.contains(party)) {
 			player.sendMessage("§a§l> §7You have left the queue!");
-
 			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
 				"§fWaiting for parties... (§b%d§f/%d)",
 				this.plugin.gameManager.queue.size(),
 				this.plugin.gameManager.queue.maxSize()
 			)));
+
+			this.plugin.gameManager.queue.remove(party);
 		} else {
 			player.sendMessage("§a§l> §7You have joined the queue!");
 
+			this.plugin.gameManager.queue.add(party);
 			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
 				"§fWaiting for parties... (§b%d§f/%d)",
 				this.plugin.gameManager.queue.size(),
