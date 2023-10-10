@@ -3,10 +3,9 @@ package com.deepanddeeper.deepanddeeper.events;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.actions.Action;
 import com.deepanddeeper.deepanddeeper.actions.JoinQueueAction;
+import com.deepanddeeper.deepanddeeper.actions.OpenSellMerchantAction;
 import com.deepanddeeper.deepanddeeper.actions.OpenStashAction;
-import com.deepanddeeper.deepanddeeper.inventories.InventoryHolderWithId;
-import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
-import com.deepanddeeper.deepanddeeper.inventories.WeaponMerchantInventory;
+import com.deepanddeeper.deepanddeeper.inventories.*;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -14,6 +13,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -34,7 +34,8 @@ public class EntityClickListener implements Listener {
 
 		Action[] actions = {
 			new JoinQueueAction(plugin),
-			new OpenStashAction(plugin)
+			new OpenStashAction(plugin),
+			new OpenSellMerchantAction(plugin),
 		};
 
 		for (InventoryHolderWithId inventory : inventories) {
@@ -78,11 +79,42 @@ public class EntityClickListener implements Listener {
 	}
 
 	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent event) throws SQLException {
+		var inventory = event.getInventory();
+
+		if (inventory.getHolder(false) instanceof SellMerchantInventory merchantInventory) {
+			merchantInventory.onInventoryClose(event);
+
+			return;
+		}
+
+		for (var entry : this.inventories.entrySet()) {
+			if (entry.getValue().getInventory().equals(inventory)) {
+				((InventoryHolderWithId) entry.getValue()).onInventoryClose(event);
+
+				return;
+			}
+		}
+	}
+
+	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) throws SQLException {
 		var inventory = event.getInventory();
 
 		if (inventory.getHolder(false) instanceof PlayerStashInventory playerInventory) {
 			playerInventory.onInventoryClick(event);
+
+			return;
+		}
+
+		if (inventory.getHolder(false) instanceof SellMerchantInventory merchantInventory) {
+			merchantInventory.onInventoryClick(event);
+
+			return;
+		}
+
+		if (inventory.getHolder(false) instanceof SpellSelectorInventory spellSelectorInventory) {
+			spellSelectorInventory.onInventoryClick(event);
 
 			return;
 		}

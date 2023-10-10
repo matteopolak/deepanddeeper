@@ -1,7 +1,6 @@
 package com.deepanddeeper.deepanddeeper.generators;
 
 import org.bukkit.generator.ChunkGenerator;
-import org.jetbrains.annotations.NotNull;
 
 public class VoidGenerator extends ChunkGenerator {
 	@Override

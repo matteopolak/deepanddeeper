@@ -15,10 +15,8 @@ import com.deepanddeeper.deepanddeeper.items.ItemManager;
 import com.deepanddeeper.deepanddeeper.items.Weapon;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
 import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
-
 import com.deepanddeeper.deepanddeeper.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
-
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
@@ -33,17 +31,19 @@ import java.util.List;
 import java.util.Map;
 
 public final class DeepAndDeeper extends JavaPlugin {
-	private FileConfiguration config = this.getConfig();
 	public Database database;
-
 	public ItemManager itemManager = new ItemManager(this);
 	public PartyManager partyManager = new PartyManager();
 	public GameManager gameManager = new GameManager(this);
 	public StatisticsManager statisticsManager = new StatisticsManager(this);
 	public ClassManager classManager = new ClassManager(this);
-
-	private Scoreboard scoreboard;
 	public Team playingTeam;
+	private FileConfiguration config = this.getConfig();
+	private Scoreboard scoreboard;
+
+	public static DeepAndDeeper getInstance() {
+		return (DeepAndDeeper) Bukkit.getPluginManager().getPlugin("DeepAndDeeper");
+	}
 
 	public ScoreboardManager scoreboardManager = new ScoreboardManager();
 
@@ -52,10 +52,11 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		Listener[] listeners = {
 			new PartyEventListener(this),
-			new PlayerJoinListener(this),
+			new PlayerJoinQuitListener(this),
 			new EntityClickListener(this),
 			new GameEventListener(this),
 			new ClassEventListener(this),
+			new GeneralEventListener(this),
 		};
 
 		PluginManager manager = this.getServer().getPluginManager();
@@ -78,10 +79,6 @@ public final class DeepAndDeeper extends JavaPlugin {
 		for (CommandWithName command : commands) {
 			this.getCommand(command.commandName()).setExecutor(command);
 		}
-	}
-
-	public static DeepAndDeeper getInstance() {
-		return (DeepAndDeeper) Bukkit.getPluginManager().getPlugin("DeepAndDeeper");
 	}
 
 	@Override
@@ -107,11 +104,11 @@ public final class DeepAndDeeper extends JavaPlugin {
 		this.saveDefaultConfig();
 
 		((List<Object>) this.getConfig().getList("weapons")).stream()
-				.map(weapon -> Weapon.deserialize(this, (Map<String, Object>) weapon))
-				.forEach(w -> {
-					this.itemManager.registerItem(w);
-					this.getLogger().info("Registered weapon " + w.name().content());
-				});
+			.map(weapon -> Weapon.deserialize(this, (Map<String, Object>) weapon))
+			.forEach(w -> {
+				this.itemManager.registerItem(w);
+				this.getLogger().info("Registered weapon " + w.name().content());
+			});
 
 		((List<Object>) this.getConfig().getList("armor")).stream()
 			.map(armor -> Armor.deserialize(this, (Map<String, Object>) armor))
@@ -134,30 +131,33 @@ public final class DeepAndDeeper extends JavaPlugin {
 
 		try (Statement st = this.database.getConnection().createStatement()) {
 			st.execute("""
-				CREATE TABLE IF NOT EXISTS "user" (
-					"uuid" UUID PRIMARY KEY
-				);
+					CREATE TABLE IF NOT EXISTS "user" (
+						"uuid" UUID PRIMARY KEY
+					);
 
-				CREATE TABLE IF NOT EXISTS "profile" (
-					"id" SERIAL PRIMARY KEY,
-					"user" UUID NOT NULL,
-					"active" BOOLEAN NOT NULL,
-					"coins" INT DEFAULT 0,
-					"wins" INT DEFAULT 0,
-					"losses" INT DEFAULT 0,
-					"kills" INT DEFAULT 0,
-					"deaths" INT DEFAULT 0,
-					"xp" INT DEFAULT 0
-				);
+					CREATE TABLE IF NOT EXISTS "profile" (
+						"id" SERIAL PRIMARY KEY,
+						"class" SMALLINT NOT NULL,
+						"user" UUID NOT NULL,
+						"active" BOOLEAN NOT NULL,
+						"coins" INT DEFAULT 0,
+						"wins" INT DEFAULT 0,
+						"losses" INT DEFAULT 0,
+						"kills" INT DEFAULT 0,
+						"deaths" INT DEFAULT 0,
+						"xp" INT DEFAULT 0,
 
-				CREATE TABLE IF NOT EXISTS "stash" (
-					"profile_id" INT NOT NULL,
-					"slot" INT NOT NULL,
-					"item_id" TEXT NOT NULL,
-					
-					PRIMARY KEY ("profile_id", "slot")
-				);
-			""");
+						UNIQUE ("user", "class")
+					);
+
+					CREATE TABLE IF NOT EXISTS "stash" (
+						"profile_id" INT NOT NULL,
+						"slot" INT NOT NULL,
+						"item_id" TEXT NOT NULL,
+						
+						PRIMARY KEY ("profile_id", "slot")
+					);
+				""");
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

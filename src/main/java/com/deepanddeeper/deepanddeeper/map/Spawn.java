@@ -21,15 +21,6 @@ public class Spawn {
 		this.pitch = pitch;
 	}
 
-	public Location location(World world) {
-		Location location = new Location(world, this.x, this.y, this.z);
-
-		location.setYaw(this.yaw);
-		location.setPitch(this.pitch);
-
-		return location;
-	}
-
 	public static @NotNull Spawn deserialize(Map<String, Object> data) {
 		double x = (double) data.get("x");
 		double y = (double) data.get("y");
@@ -38,5 +29,14 @@ public class Spawn {
 		double pitch = (double) data.get("pitch");
 
 		return new Spawn(x, y, z, (float) yaw, (float) pitch);
+	}
+
+	public Location location(World world) {
+		Location location = new Location(world, this.x, this.y, this.z);
+
+		location.setYaw(this.yaw);
+		location.setPitch(this.pitch);
+
+		return location;
 	}
 }

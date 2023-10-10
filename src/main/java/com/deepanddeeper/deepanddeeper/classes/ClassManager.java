@@ -8,9 +8,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class ClassManager {
-	private DeepAndDeeper plugin;
-
 	public Map<UUID, GameClass> classes = new HashMap<>();
+	private DeepAndDeeper plugin;
 
 	public ClassManager(DeepAndDeeper plugin) {
 		this.plugin = plugin;
@@ -23,6 +22,13 @@ public class ClassManager {
 		this.classes.put(player.getUniqueId(), gameClass);
 	}
 
+	public void blankActivateClass(Player player, GameClassType type) {
+		GameClass gameClass = type.getGameClass(this.plugin);
+
+		gameClass.applyEffects(player);
+		this.classes.put(player.getUniqueId(), gameClass);
+	}
+
 	public void deactivateClass(Player player) {
 		GameClass gameClass = this.classes.get(player.getUniqueId());
 
@@ -32,8 +38,16 @@ public class ClassManager {
 		}
 	}
 
-	public void switchClass(Player player, GameClassType type) {
+	public boolean switchClass(Player player, GameClassType type) {
+		GameClass gameClass = this.classes.get(player.getUniqueId());
+
+		if (gameClass != null && gameClass.type() == type) {
+			return false;
+		}
+
 		this.deactivateClass(player);
 		this.activateClass(player, type);
+
+		return true;
 	}
 }

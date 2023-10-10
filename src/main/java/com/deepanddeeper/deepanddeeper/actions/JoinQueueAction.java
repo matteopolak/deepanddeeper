@@ -1,15 +1,11 @@
 package com.deepanddeeper.deepanddeeper.actions;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.game.Game;
-import com.deepanddeeper.deepanddeeper.game.Queue;
 import com.deepanddeeper.deepanddeeper.party.Party;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class JoinQueueAction implements Action {
@@ -39,19 +35,24 @@ public class JoinQueueAction implements Action {
 			return;
 		}
 
-		if (!this.plugin.gameManager.queue.add(party)) {
-			this.plugin.gameManager.queue.remove(party);
+		if (!this.plugin.classManager.classes.containsKey(player.getUniqueId())) {
+			player.sendMessage("§c§l> §7You must select a class before joining the queue.");
+			return;
+		}
 
+		if (this.plugin.gameManager.queue.contains(party)) {
 			player.sendMessage("§a§l> §7You have left the queue!");
-
 			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
 				"§fWaiting for parties... (§b%d§f/%d)",
 				this.plugin.gameManager.queue.size(),
 				this.plugin.gameManager.queue.maxSize()
 			)));
+
+			this.plugin.gameManager.queue.remove(party);
 		} else {
 			player.sendMessage("§a§l> §7You have joined the queue!");
 
+			this.plugin.gameManager.queue.add(party);
 			this.plugin.gameManager.queue.sendActionBar(Component.text(String.format(
 				"§fWaiting for parties... (§b%d§f/%d)",
 				this.plugin.gameManager.queue.size(),

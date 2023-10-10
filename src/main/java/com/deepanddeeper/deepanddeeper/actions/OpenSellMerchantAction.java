@@ -1,30 +1,27 @@
 package com.deepanddeeper.deepanddeeper.actions;
 
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
-import com.deepanddeeper.deepanddeeper.inventories.PlayerStashInventory;
-import org.bukkit.NamespacedKey;
+import com.deepanddeeper.deepanddeeper.inventories.SellMerchantInventory;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.InventoryHolder;
 
 import java.util.UUID;
 
-public class OpenStashAction implements Action {
+public class OpenSellMerchantAction implements Action {
 	private DeepAndDeeper plugin;
-	private NamespacedKey itemId;
 
-	public OpenStashAction(DeepAndDeeper plugin) {
+	public OpenSellMerchantAction(DeepAndDeeper plugin) {
 		this.plugin = plugin;
-		this.itemId = new NamespacedKey(plugin, "itemId");
 	}
 
 	@Override
 	public UUID id() {
-		return UUID.fromString("79295d34-3120-4b0b-bfab-d301bfebb3b5");
+		return UUID.fromString("f0c13dff-8e91-46c5-9873-c49be7e3e775");
 	}
 
 	@Override
 	public void perform(PlayerInteractEntityEvent event) {
-		InventoryHolder holder = new PlayerStashInventory(this.plugin, event.getPlayer().getUniqueId());
+		InventoryHolder holder = new SellMerchantInventory(this.plugin);
 
 		event.getPlayer()
 			.openInventory(holder.getInventory());

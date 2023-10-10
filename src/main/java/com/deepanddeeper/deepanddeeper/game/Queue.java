@@ -32,8 +32,13 @@ public class Queue {
 		return true;
 	}
 
+	public boolean contains(Party party) {
+		return this.queue.contains(party);
+	}
+
 	/**
 	 * Removes a party from the queue.
+	 *
 	 * @param party
 	 * @return `true` if the party was in the queue beforehand
 	 */

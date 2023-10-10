@@ -12,44 +12,43 @@ import org.jetbrains.annotations.NotNull;
 
 public class PartyKickCommand implements CommandWithName {
 
-    private DeepAndDeeper plugin;
+	private DeepAndDeeper plugin;
 
-    public PartyKickCommand(DeepAndDeeper plugin) {
-        this.plugin = plugin;
-    }
+	public PartyKickCommand(DeepAndDeeper plugin) {
+		this.plugin = plugin;
+	}
 
-    public String commandName() {
-        return "kick";
-    }
+	public String commandName() {
+		return "kick";
+	}
 
-    @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if(sender instanceof Player player) {
+	@Override
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+		if (sender instanceof Player player) {
 
 
-            Party party = this.plugin.partyManager.getParty(player);
-            if(party.getLeader() != player) {
-                player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
-                return false;
-            }
+			Party party = this.plugin.partyManager.getParty(player);
+			if (party.getLeader() != player) {
+				player.sendMessage("§c§l> §7You cannot invite a player unless you are the party leader!");
+				return true;
+			}
 
-            Game game = this.plugin.gameManager.games.get(player.getUniqueId());
+			Game game = this.plugin.gameManager.games.get(player.getUniqueId());
 
-            if(game != null && !game.hasEnded()) {
-                player.sendMessage("§c§l> §7You cannot kick a player during a game!");
-                return false;
-            }
+			if (game != null && !game.hasEnded()) {
+				player.sendMessage("§c§l> §7You cannot kick a player during a game!");
+				return true;
+			}
 
-            Player playerToKick = Bukkit.getPlayerExact(args[0]);
+			Player playerToKick = Bukkit.getPlayerExact(args[0]);
 
-            if(party.members.contains(playerToKick)) {
-                this.plugin.partyManager.leave(playerToKick);
-            } else {
-                player.sendMessage("§b§l> §fPlayer could not be found.");
-            }
+			if (party.members.contains(playerToKick)) {
+				this.plugin.partyManager.leave(playerToKick);
+			} else {
+				player.sendMessage("§b§l> §fPlayer could not be found.");
+			}
+		}
 
-        }
-        return true;
-
-    }
+		return true;
+	}
 }

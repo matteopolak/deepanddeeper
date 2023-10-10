@@ -3,8 +3,11 @@ package com.deepanddeeper.deepanddeeper.game;
 import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import com.deepanddeeper.deepanddeeper.map.Map;
 import com.deepanddeeper.deepanddeeper.party.Party;
+import com.deepanddeeper.deepanddeeper.util.Pair;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 enum GameState {
@@ -33,6 +37,8 @@ public class Game extends BukkitRunnable {
 
 	private int countdown = 5;
 	private int id;
+
+	private final Random random = new Random();
 
 	public Game(int id, @NotNull DeepAndDeeper plugin, @NotNull List<Party> parties, @NotNull World world, @NotNull Map map) {
 		this.id = id;
@@ -77,6 +83,14 @@ public class Game extends BukkitRunnable {
 		this.runTaskTimer(this.plugin, 20, 20);
 	}
 
+	private void clearDroppedItems() {
+		for (Entity entity : this.world.getEntities()) {
+			if (entity instanceof Item item) {
+				item.remove();
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		if (this.state == GameState.STARTING) {
@@ -90,6 +104,8 @@ public class Game extends BukkitRunnable {
 			} else if (this.countdown == 0) {
 				this.sendActionBar(Component.text("§fGame starting..."));
 				this.countdown--;
+
+				this.clearDroppedItems();
 
 				var borders = this.map.borders();
 				var firstBorder = borders.get(0);
@@ -105,6 +121,7 @@ public class Game extends BukkitRunnable {
 						border.setDamageBuffer(0);
 						border.setWarningDistance(2);
 						border.setWarningTime(5);
+						border.setCenter(0.5, 0.5);
 						border.setSize(secondBorder.first, secondBorder.second);
 
 						this.borderIndex = 2;
@@ -145,6 +162,8 @@ public class Game extends BukkitRunnable {
 				this.world.getWorldBorder().setSize(border.first, border.second);
 				this.borderIndex++;
 
+				this.spawnPortals(border);
+
 				if (this.borderIndex < borders.size()) {
 					this.borderTimeLeft = border.second;
 				} else {
@@ -156,50 +175,79 @@ public class Game extends BukkitRunnable {
 		}
 	}
 
-	public void removePlayer(Player player) throws SQLException {
-		this.livingPlayers.remove(player);
+	public void spawnPortals(Pair<Double, Long> border) {
+		int sideLength = border.first.intValue() / 2;
+		int upperBound = (int) (border.first * Math.sqrt(border.first) * 0.1);
 
-		Player reference = null;
+		for (int x = -sideLength; x < border.first; x += 5) {
+			for (int z = -sideLength; z < border.first; z += 5) {
+				for (int y = -16; y < 16; ++y) {
+					Location location = new Location(this.world, x, y, z);
 
-		for (Player p : this.livingPlayers) {
-			if (reference == null) reference = p;
-			else if (this.plugin.partyManager.getParty(p) != this.plugin.partyManager.getParty(reference)) {
-				return;
+					if (location.getBlock().isPassable()) continue;
+					if (!location.add(0, 1, 0).getBlock().isPassable()) continue;
+					if (!location.add(0, 1, 0).getBlock().isPassable()) continue;
+
+					location.add(0, -1, 0);
+
+					boolean hasAirAround = true;
+					boolean hasBlocksUnder = true;
+
+					for (int x2 = -1; x2 <= 1; ++x2) {
+						for (int z2 = -1; z2 <= 1; ++z2) {
+							if (!location.clone().add(x2, 0, z2).getBlock().isPassable()) {
+								hasAirAround = false;
+
+								if (!hasBlocksUnder) break;
+							}
+
+							if (location.clone().add(x2, -1, z2).getBlock().isPassable()) {
+								hasBlocksUnder = false;
+
+								if (!hasAirAround) break;
+							}
+						}
+					}
+
+					if (!hasAirAround || !hasBlocksUnder) continue;
+
+					boolean hasBlockAbove = false;
+
+					// ensure there is a block above the block at most 16 block above
+					for (int y2 = 1; y2 <= 16; ++y2) {
+						if (!location.clone().add(0, y2, 0).getBlock().isPassable()) {
+							hasBlockAbove = true;
+							break;
+						}
+					}
+
+					if (!hasBlockAbove) continue;
+					if (this.random.nextInt(upperBound) != 0) continue;
+
+					// set the block to a prismarine wall
+					location.getBlock().setType(Material.PRISMARINE_WALL);
+
+					this.sendMessage("§9§l> §7An escape portal has opened!");
+				}
 			}
 		}
+	}
 
-		// At this point, all players are in the same party
-		// so the game has ended!
+	public void end() {
 		this.ended = true;
-
-		for (Player p : this.livingPlayers) {
-			p.teleport(Bukkit.getWorld("world").getSpawnLocation());
-		}
 
 		String worldName = this.world.getName();
 		Bukkit.unloadWorld(worldName, false);
+
 		GameManager.freeGameIds.add(this.id);
+	}
 
-		if (reference == null) return;
+	public void removePlayer(Player player) {
+		this.livingPlayers.remove(player);
+		this.plugin.playingTeam.removePlayer(player);
 
-		Party winningParty = this.plugin.partyManager.getParty(reference);
-
-		for (Player p : winningParty.getMembers()) {
-			this.plugin.statisticsManager.addWin(p);
-			this.plugin.playingTeam.removePlayer(player);
-		}
-
-		winningParty.sendMessage("§b§l> §7Your party has won the game!");
-
-		for (Party party : this.parties) {
-			if (party == winningParty) continue;
-
-			for (Player p : party.getMembers()) {
-				this.plugin.statisticsManager.addLoss(p);
-				this.plugin.playingTeam.removePlayer(player);
-			}
-
-			party.sendMessage("§b§l> §7Your party has lost the game.");
+		if (this.livingPlayers.isEmpty()) {
+			this.end();
 		}
 	}
 }
