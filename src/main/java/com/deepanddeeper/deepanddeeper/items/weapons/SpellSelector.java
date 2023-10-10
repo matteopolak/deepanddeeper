@@ -13,7 +13,7 @@ public class SpellSelector extends Weapon {
 	private final SpellSelectorInventory inventory;
 
 	public SpellSelector(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
-		super(plugin, id, buyPrice, sellPrice, name, material, lore);
+		super(plugin, id, buyPrice, sellPrice, name, material, lore, 0);
 
 		this.inventory = new SpellSelectorInventory(plugin);
 	}

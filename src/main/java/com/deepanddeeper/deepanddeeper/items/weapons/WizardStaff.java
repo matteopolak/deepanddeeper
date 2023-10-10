@@ -15,7 +15,7 @@ import java.util.List;
 
 public class WizardStaff extends Weapon {
 	public WizardStaff(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
-		super(plugin, id, buyPrice, sellPrice, name, material, lore);
+		super(plugin, id, buyPrice, sellPrice, name, material, lore, 5);
 	}
 
 	@Override

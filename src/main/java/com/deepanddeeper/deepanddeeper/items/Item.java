@@ -4,6 +4,8 @@ import com.deepanddeeper.deepanddeeper.DeepAndDeeper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -22,7 +24,7 @@ public class Item {
 
 	protected DeepAndDeeper plugin;
 
-	public Item(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, int amount, List<String> lore) {
+	public Item(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, int amount, List<String> lore, double attackSpeed) {
 		this.plugin = plugin;
 		this.id = id;
 		this.name = Component.text(name);
@@ -45,6 +47,7 @@ public class Item {
 			.getPersistentDataContainer()
 			.set(plugin.itemManager.idKey, PersistentDataType.STRING, this.id());
 
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier("generic.attackSpeed", attackSpeed, AttributeModifier.Operation.ADD_NUMBER));
 		if (this.item.getType().getMaxDurability() > 0) {
 			meta.setUnbreakable(true);
 		}
@@ -81,4 +84,9 @@ public class Item {
 	public int sellPrice() {
 		return this.sellPrice;
 	}
+
+	public void enhanceMeta(ItemMeta meta) {
+
+	}
+
 }
