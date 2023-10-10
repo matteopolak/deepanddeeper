@@ -14,6 +14,8 @@ import com.deepanddeeper.deepanddeeper.items.Armor;
 import com.deepanddeeper.deepanddeeper.items.ItemManager;
 import com.deepanddeeper.deepanddeeper.items.Weapon;
 import com.deepanddeeper.deepanddeeper.party.PartyManager;
+import com.deepanddeeper.deepanddeeper.events.EntityClickListener;
+import com.deepanddeeper.deepanddeeper.scoreboard.ScoreboardManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -42,6 +44,8 @@ public final class DeepAndDeeper extends JavaPlugin {
 	public static DeepAndDeeper getInstance() {
 		return (DeepAndDeeper) Bukkit.getPluginManager().getPlugin("DeepAndDeeper");
 	}
+
+	public ScoreboardManager scoreboardManager = new ScoreboardManager();
 
 	private void registerListeners() {
 		// Add event listeners here

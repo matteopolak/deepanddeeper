@@ -94,16 +94,11 @@ public class PlayerJoinQuitListener implements Listener {
 			connection.setAutoCommit(true);
 		}
 
-		int coins = this.plugin.statisticsManager.getCoins(player);
 
+		//Initialize Scoreboard
 		Scoreboard scoreboard = player.getScoreboard();
-		Objective objective = scoreboard.getObjective("coins");
+		plugin.scoreboardManager.update(scoreboard);
 
-		if (objective == null) {
-			objective = scoreboard.registerNewObjective("coins", Criteria.DUMMY, Component.text("Coins"));
-		}
 
-		// display coins on scoreboard only to the player, like FeatherBoard
-		objective.getScore(player.getName()).setScore(coins);
 	}
 }

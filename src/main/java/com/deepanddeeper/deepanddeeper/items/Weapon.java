@@ -16,8 +16,9 @@ public class Weapon extends Item {
 	private double damage = 1;
 	private long cooldown = 1_200;
 
-	public Weapon(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
-		super(plugin, id, buyPrice, sellPrice, name, material, 1, lore);
+	public Weapon(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore, double cooldown) {
+		super(plugin, id, buyPrice, sellPrice, name, material, 1, lore, cooldown);
+
 	}
 
 	public static @NotNull Weapon deserialize(DeepAndDeeper plugin, Map<String, Object> data) {
@@ -33,7 +34,7 @@ public class Weapon extends Item {
 		return (switch (id) {
 			case "wizard_staff" -> new WizardStaff(plugin, id, buyPrice, sellPrice, name, material, lore);
 			case "wizard_spell_selector" -> new SpellSelector(plugin, id, buyPrice, sellPrice, name, material, lore);
-			default -> new Weapon(plugin, id, buyPrice, sellPrice, name, material, lore);
+			default -> new Weapon(plugin, id, buyPrice, sellPrice, name, material, lore, cooldown);
 		})
 			.damage(damage)
 			.cooldown((long) (cooldown * 1000d));

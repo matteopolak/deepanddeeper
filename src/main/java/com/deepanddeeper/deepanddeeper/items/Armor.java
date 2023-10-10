@@ -11,7 +11,7 @@ public class Armor extends Item {
 	private int armorRating = 1;
 
 	public Armor(DeepAndDeeper plugin, String id, int buyPrice, int sellPrice, String name, Material material, List<String> lore) {
-		super(plugin, id, buyPrice, sellPrice, name, material, 1, lore);
+		super(plugin, id, buyPrice, sellPrice, name, material, 1, lore, 0);
 	}
 
 	public static @NotNull Armor deserialize(DeepAndDeeper plugin, Map<String, Object> data) {
