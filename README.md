@@ -1,7 +1,19 @@
-# DeepAndDeeper
+# Deep and Deeper
 
-## Symlinking jar for development
+A [Dark and Darker](https://darkanddarker.com/) clone in Minecraft.
 
-```shell
-mklink /H "./DeepAndDeeper.jar" "..\..\deepanddeeper\out\artifacts\DeepAndDeeper_jar\DeepAndDeeper.jar"
-```
+## Features
+
+- Classes
+- Item stash
+- Merchants
+- Queues
+- Map generation
+- Abilities
+- Shrines
+- Escape portals
+- Bosses
+
+## Installation
+
+This plugin must be built from source.
